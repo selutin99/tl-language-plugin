@@ -37,7 +37,7 @@ class TealSyntaxHighlighter : SyntaxHighlighterBase() {
         ))
         private val TYPE_KEYS = arrayOf<TextAttributesKey>(TextAttributesKey.createTextAttributesKey(
             "TEAL_TYPE",
-            DefaultLanguageHighlighterColors.CLASS_NAME
+            DefaultLanguageHighlighterColors.KEYWORD
         ))
         private val NUMBER_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
             "TEAL_NUMBER",
