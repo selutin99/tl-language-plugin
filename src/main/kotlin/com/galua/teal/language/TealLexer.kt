@@ -42,7 +42,7 @@ class TealLexer : LexerBase() {
         }
 
         tokenStart = tokenEnd
-        var current = buffer[tokenStart]
+        val current = buffer[tokenStart]
 
         if (current.isWhitespace()) {
             tokenEnd = consumeWhile(tokenStart) { it.isWhitespace() }

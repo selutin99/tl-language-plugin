@@ -1,4 +1,5 @@
 <idea-plugin>
+
     <id>com.galua.teal.language</id>
     <name>Teal Language Support</name>
     <vendor email="selutin991@gmail.com">Teal</vendor>
@@ -12,9 +13,12 @@
             name="Teal"
             language="Teal"
             extensions="tl"
-            implementationClass="com.galua.teal.language.TealFileType" />
+            implementationClass="com.galua.teal.language.TealFileType"
+        />
         <lang.syntaxHighlighterFactory
             language="Teal"
-            implementationClass="com.galua.teal.language.TealSyntaxHighlighterFactory" />
+            implementationClass="com.galua.teal.language.TealSyntaxHighlighterFactory"
+        />
     </extensions>
+
 </idea-plugin>

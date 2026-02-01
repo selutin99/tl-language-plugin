@@ -5,6 +5,7 @@ import com.intellij.psi.tree.IElementType
 class TealTokenType(debugName: String) : IElementType(debugName, TealLanguage)
 
 object TealTokenTypes {
+
     val KEYWORD = TealTokenType("KEYWORD")
     val TYPE = TealTokenType("TYPE")
     val IDENTIFIER = TealTokenType("IDENTIFIER")
