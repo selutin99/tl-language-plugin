@@ -1,4 +1,4 @@
-package com.galua.teal.language
+package com.galua.teal.language.lexer
 
 import com.intellij.lexer.LexerBase
 import com.intellij.psi.TokenType

@@ -1,4 +1,4 @@
-package com.galua.teal.language
+package com.galua.teal.language.core
 
 import com.intellij.openapi.util.IconLoader
 import javax.swing.Icon

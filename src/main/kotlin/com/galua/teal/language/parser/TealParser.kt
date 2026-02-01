@@ -1,5 +1,6 @@
-package com.galua.teal.language
+package com.galua.teal.language.parser
 
+import com.galua.teal.language.lexer.TealTokenTypes
 import com.intellij.lang.ASTNode
 import com.intellij.lang.PsiBuilder
 import com.intellij.lang.PsiParser

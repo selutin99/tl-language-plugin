@@ -12,15 +12,15 @@
             name="Teal"
             language="Teal"
             extensions="tl"
-            implementationClass="com.galua.teal.language.TealFileType" />
+            implementationClass="com.galua.teal.language.core.TealFileType" />
         <lang.syntaxHighlighterFactory
             language="Teal"
-            implementationClass="com.galua.teal.language.TealSyntaxHighlighterFactory" />
+            implementationClass="com.galua.teal.language.highlighting.TealSyntaxHighlighterFactory" />
         <lang.parserDefinition
             language="Teal"
-            implementationClass="com.galua.teal.language.TealParserDefinition" />
+            implementationClass="com.galua.teal.language.parser.TealParserDefinition" />
         <annotator
             language="Teal"
-            implementationClass="com.galua.teal.language.TealAnnotator" />
+            implementationClass="com.galua.teal.language.annotator.TealAnnotator" />
     </extensions>
 </idea-plugin>

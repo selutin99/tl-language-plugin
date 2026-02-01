@@ -1,5 +1,7 @@
-package com.galua.teal.language
+package com.galua.teal.language.annotator
 
+import com.galua.teal.language.lexer.TealTokenTypes
+import com.galua.teal.language.parser.TealElementTypes
 import com.galua.teal.language.psi.TealLocalDeclaration
 import com.galua.teal.language.psi.TealTypeReference
 import com.intellij.lang.annotation.AnnotationHolder
@@ -46,11 +48,17 @@ class TealAnnotator : Annotator {
             child.node.elementType == TealTokenTypes.TYPE ||
                 child.node.elementType == TealTokenTypes.IDENTIFIER
         }
-        val declaredType = typeElement?.text?.trim().orEmpty()
-        return if (declaredType.isNotEmpty()) {
-            declaredType to typeElement
+        val declaredType = typeElement?.text?.trim()
+        if (!declaredType.isNullOrEmpty()) {
+            return declaredType to typeElement
+        }
+
+        val rawText = typeReference.text.trim()
+        val strippedText = rawText.replaceFirst(Regex("^:+\\s*"), "").trim()
+        return if (strippedText.isNotEmpty()) {
+            strippedText to null
         } else {
-            typeReference.text.trim() to null
+            rawText to null
         }
     }
 

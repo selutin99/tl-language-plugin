@@ -1,5 +1,6 @@
-package com.galua.teal.language
+package com.galua.teal.language.parser
 
+import com.galua.teal.language.core.TealLanguage
 import com.intellij.psi.tree.IFileElementType
 
 object TealElementTypes {

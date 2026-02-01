@@ -1,4 +1,4 @@
-package com.galua.teal.language
+package com.galua.teal.language.highlighting
 
 import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory

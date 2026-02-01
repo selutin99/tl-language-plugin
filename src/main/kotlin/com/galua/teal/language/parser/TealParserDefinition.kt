@@ -1,5 +1,7 @@
-package com.galua.teal.language
+package com.galua.teal.language.parser
 
+import com.galua.teal.language.lexer.TealLexer
+import com.galua.teal.language.lexer.TealTokenTypes
 import com.galua.teal.language.psi.TealFile
 import com.galua.teal.language.psi.TealPsiElement
 import com.galua.teal.language.psi.TealBooleanLiteral

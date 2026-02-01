@@ -1,5 +1,6 @@
-package com.galua.teal.language
+package com.galua.teal.language.lexer
 
+import com.galua.teal.language.core.TealLanguage
 import com.intellij.psi.tree.IElementType
 
 class TealTokenType(debugName: String) : IElementType(debugName, TealLanguage)

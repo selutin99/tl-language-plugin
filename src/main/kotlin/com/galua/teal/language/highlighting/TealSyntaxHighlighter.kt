@@ -1,5 +1,7 @@
-package com.galua.teal.language
+package com.galua.teal.language.highlighting
 
+import com.galua.teal.language.lexer.TealLexer
+import com.galua.teal.language.lexer.TealTokenTypes
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.HighlighterColors

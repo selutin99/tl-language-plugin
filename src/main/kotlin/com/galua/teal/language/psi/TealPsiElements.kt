@@ -1,6 +1,6 @@
 package com.galua.teal.language.psi
 
-import com.galua.teal.language.TealElementTypes
+import com.galua.teal.language.parser.TealElementTypes
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
