@@ -85,10 +85,31 @@ class TealLexer : LexerBase() {
             return
         }
 
+        if (BRACKETS.contains(current)) {
+            tokenEnd = tokenStart + 1
+            tokenType = TealTokenTypes.BRACKET
+            return
+        }
+
+        val operatorLength = operatorLengthAt(tokenStart)
+        if (operatorLength > 0) {
+            tokenEnd = tokenStart + operatorLength
+            tokenType = if (PUNCTUATION_SINGLE.contains(current)) {
+                TealTokenTypes.PUNCTUATION
+            } else {
+                TealTokenTypes.OPERATOR
+            }
+            return
+        }
+
         if (current.isIdentifierStart()) {
             tokenEnd = consumeWhile(tokenStart) { it.isIdentifierPart() }
             val text = buffer.subSequence(tokenStart, tokenEnd).toString()
-            tokenType = if (KEYWORDS.contains(text)) TealTokenTypes.KEYWORD else TealTokenTypes.IDENTIFIER
+            tokenType = when {
+                KEYWORDS.contains(text) -> TealTokenTypes.KEYWORD
+                TYPE_KEYWORDS.contains(text) -> TealTokenTypes.TYPE
+                else -> TealTokenTypes.IDENTIFIER
+            }
             return
         }
 
@@ -107,6 +128,35 @@ class TealLexer : LexerBase() {
     private fun Char.isIdentifierStart(): Boolean = this == '_' || this.isLetter()
 
     private fun Char.isIdentifierPart(): Boolean = this == '_' || this.isLetterOrDigit()
+
+    private fun operatorLengthAt(startIndex: Int): Int {
+        val current = buffer[startIndex]
+        val next = if (startIndex + 1 < endOffset) buffer[startIndex + 1] else null
+        val nextNext = if (startIndex + 2 < endOffset) buffer[startIndex + 2] else null
+
+        return when (current) {
+            '.' -> when {
+                next == '.' && nextNext == '.' -> 3
+                next == '.' -> 2
+                else -> 1
+            }
+            ':' -> if (next == ':') 2 else 1
+            '=' -> if (next == '=') 2 else 1
+            '~' -> if (next == '=') 2 else 1
+            '<' -> if (next == '=') 2 else 1
+            '>' -> if (next == '=') 2 else 1
+            '/' -> if (next == '/') 2 else 1
+            '-' -> if (next == '>') 2 else 1
+            '+' -> 1
+            '*' -> 1
+            '%' -> 1
+            '^' -> 1
+            '#' -> 1
+            ',' -> 1
+            ';' -> 1
+            else -> 0
+        }
+    }
 
     companion object {
         private val KEYWORDS = setOf(
@@ -138,5 +188,18 @@ class TealLexer : LexerBase() {
             "as",
             "is"
         )
+        private val TYPE_KEYWORDS = setOf(
+            "any",
+            "boolean",
+            "integer",
+            "number",
+            "string",
+            "table",
+            "thread",
+            "userdata",
+            "function"
+        )
+        private val BRACKETS = setOf('(', ')', '[', ']', '{', '}')
+        private val PUNCTUATION_SINGLE = setOf(',', ';', ':', '.')
     }
 }

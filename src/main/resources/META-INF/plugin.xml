@@ -1,9 +1,9 @@
 <idea-plugin>
     <id>com.galua.teal.language</id>
     <name>Teal Language Support</name>
-    <vendor email="support@example.com">Teal</vendor>
+    <vendor email="selutin991@gmail.com">Teal</vendor>
 
-    <description>Basic Teal language file support.</description>
+    <description>Basic Teal language file support</description>
 
     <depends>com.intellij.modules.platform</depends>
 

@@ -14,10 +14,14 @@ class TealSyntaxHighlighter : SyntaxHighlighterBase() {
 
     override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> = when (tokenType) {
         TealTokenTypes.KEYWORD -> KEYWORD_KEYS
+        TealTokenTypes.TYPE -> TYPE_KEYS
         TealTokenTypes.STRING -> STRING_KEYS
         TealTokenTypes.NUMBER -> NUMBER_KEYS
         TealTokenTypes.COMMENT -> COMMENT_KEYS
         TealTokenTypes.IDENTIFIER -> IDENTIFIER_KEYS
+        TealTokenTypes.OPERATOR -> OPERATOR_KEYS
+        TealTokenTypes.BRACKET -> BRACKET_KEYS
+        TealTokenTypes.PUNCTUATION -> PUNCTUATION_KEYS
         TokenType.BAD_CHARACTER -> BAD_CHAR_KEYS
         else -> EMPTY
     }
@@ -31,6 +35,10 @@ class TealSyntaxHighlighter : SyntaxHighlighterBase() {
             "TEAL_STRING",
             DefaultLanguageHighlighterColors.STRING
         ))
+        private val TYPE_KEYS = arrayOf<TextAttributesKey>(TextAttributesKey.createTextAttributesKey(
+            "TEAL_TYPE",
+            DefaultLanguageHighlighterColors.CLASS_NAME
+        ))
         private val NUMBER_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
             "TEAL_NUMBER",
             DefaultLanguageHighlighterColors.NUMBER
@@ -42,6 +50,18 @@ class TealSyntaxHighlighter : SyntaxHighlighterBase() {
         private val IDENTIFIER_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
             "TEAL_IDENTIFIER",
             DefaultLanguageHighlighterColors.IDENTIFIER
+        ))
+        private val OPERATOR_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
+            "TEAL_OPERATOR",
+            DefaultLanguageHighlighterColors.OPERATION_SIGN
+        ))
+        private val BRACKET_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
+            "TEAL_BRACKET",
+            DefaultLanguageHighlighterColors.BRACKETS
+        ))
+        private val PUNCTUATION_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
+            "TEAL_PUNCTUATION",
+            DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL
         ))
         private val BAD_CHAR_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
             "TEAL_BAD_CHARACTER",
