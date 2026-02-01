@@ -1,0 +1,20 @@
+<idea-plugin>
+    <id>com.galua.teal.language</id>
+    <name>Teal Language Support</name>
+    <vendor email="support@example.com">Teal</vendor>
+
+    <description>Basic Teal language file support.</description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType
+            name="Teal"
+            language="Teal"
+            extensions="tl"
+            implementationClass="com.galua.teal.language.TealFileType" />
+        <lang.syntaxHighlighterFactory
+            language="Teal"
+            implementationClass="com.galua.teal.language.TealSyntaxHighlighterFactory" />
+    </extensions>
+</idea-plugin>
