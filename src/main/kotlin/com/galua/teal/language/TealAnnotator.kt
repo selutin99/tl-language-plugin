@@ -16,12 +16,12 @@ class TealAnnotator : Annotator {
 
     private fun validateLocalDeclaration(element: TealLocalDeclaration, holder: AnnotationHolder) {
         val typeReference = element.typeReference() ?: return
-        val declaredType = typeReference.text.trim()
+        val (declaredType, declaredTypeElement) = extractDeclaredType(typeReference)
         if (!BUILT_IN_TYPES.contains(declaredType)) {
             holder.newAnnotation(
                 HighlightSeverity.ERROR,
                 "Unknown type '$declaredType'"
-            ).range(typeReference).create()
+            ).range(declaredTypeElement ?: typeReference).create()
             return
         }
 
@@ -38,6 +38,19 @@ class TealAnnotator : Annotator {
                 HighlightSeverity.ERROR,
                 "Cannot assign $initializerType to $declaredType"
             ).range(initializer).create()
+        }
+    }
+
+    private fun extractDeclaredType(typeReference: TealTypeReference): Pair<String, PsiElement?> {
+        val typeElement = typeReference.children.firstOrNull { child ->
+            child.node.elementType == TealTokenTypes.TYPE ||
+                child.node.elementType == TealTokenTypes.IDENTIFIER
+        }
+        val declaredType = typeElement?.text?.trim().orEmpty()
+        return if (declaredType.isNotEmpty()) {
+            declaredType to typeElement
+        } else {
+            typeReference.text.trim() to null
         }
     }
 
