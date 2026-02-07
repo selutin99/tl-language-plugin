@@ -75,6 +75,7 @@ class TealAnnotator : Annotator {
     }
 
     companion object {
+
         private val BUILT_IN_TYPES = setOf(
             "any",
             "boolean",

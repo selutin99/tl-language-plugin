@@ -10,6 +10,7 @@ tab_width = 4
 trim_trailing_whitespace = true
 
 [*.{kt,kts}]
+ij_kotlin_blank_lines_after_class_header = 1
 ij_kotlin_imports_layout = *
 ij_kotlin_line_comment_at_first_column = false
 ij_kotlin_spaces_around_assignment_operators = true
