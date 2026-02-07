@@ -22,5 +22,32 @@
         <annotator
             language="Teal"
             implementationClass="com.galua.teal.language.annotator.TealAnnotator" />
+        <notificationGroup
+            id="Teal"
+            displayType="BALLOON"
+            isLogByDefault="true" />
     </extensions>
+
+    <actions>
+        <group id="Teal.Tools" text="Teal" description="Teal commands">
+            <add-to-group group-id="ToolsMenu" anchor="last" />
+            <add-to-group group-id="EditorPopupMenu" anchor="last" />
+
+            <action
+                id="Teal.Check"
+                class="com.galua.teal.language.actions.TealCheckAction"
+                text="Teal: Check"
+                description="Run tl check on the current file" />
+            <action
+                id="Teal.Gen"
+                class="com.galua.teal.language.actions.TealGenAction"
+                text="Teal: Gen"
+                description="Run tl gen on the current file" />
+            <action
+                id="Teal.Run"
+                class="com.galua.teal.language.actions.TealRunAction"
+                text="Teal: Run"
+                description="Run tl run on the current file" />
+        </group>
+    </actions>
 </idea-plugin>

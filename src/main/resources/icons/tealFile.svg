@@ -1,6 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <!-- Background circle -->
-  <circle cx="8" cy="8" r="8" fill="#00b3b3"/>
-  <!-- White square -->
-  <rect x="9" y="3" width="4" height="4" fill="#ffffff"/>
+    <!--Cut square-->
+    <defs>
+        <mask id="cut">
+            <rect width="16" height="16" fill="white"/>
+            <rect x="9" y="3" width="4" height="4" fill="black"/>
+        </mask>
+    </defs>
+
+    <!--Background circle-->
+    <circle cx="8" cy="8" r="8" fill="#00b3b3" mask="url(#cut)"/>
 </svg>
