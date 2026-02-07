@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
+ * SPDX-License-Identifier: MIT
+ */
 package com.galua.teal.language.lexer
 
 import com.intellij.lexer.LexerBase

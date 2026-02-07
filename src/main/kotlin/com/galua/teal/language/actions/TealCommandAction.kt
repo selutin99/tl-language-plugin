@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
+ * SPDX-License-Identifier: MIT
+ */
 package com.galua.teal.language.actions
 
 import com.intellij.execution.configurations.GeneralCommandLine
@@ -16,6 +20,7 @@ abstract class TealCommandAction(
     private val successTitle: String,
     private val failureTitle: String
 ) : AnAction() {
+
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
         val file = event.getData(CommonDataKeys.VIRTUAL_FILE)

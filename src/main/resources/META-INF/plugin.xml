@@ -1,3 +1,7 @@
+<!--
+    SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
+    SPDX-License-Identifier: MIT
+-->
 <idea-plugin>
     <id>com.galua.teal.language</id>
     <name>Teal Language Support</name>
@@ -12,42 +16,43 @@
             name="Teal"
             language="Teal"
             extensions="tl"
-            implementationClass="com.galua.teal.language.core.TealFileType" />
+            implementationClass="com.galua.teal.language.core.TealFileType"/>
         <lang.syntaxHighlighterFactory
             language="Teal"
-            implementationClass="com.galua.teal.language.highlighting.TealSyntaxHighlighterFactory" />
+            implementationClass="com.galua.teal.language.highlighting.TealSyntaxHighlighterFactory"/>
         <lang.parserDefinition
             language="Teal"
-            implementationClass="com.galua.teal.language.parser.TealParserDefinition" />
+            implementationClass="com.galua.teal.language.parser.TealParserDefinition"/>
         <annotator
             language="Teal"
-            implementationClass="com.galua.teal.language.annotator.TealAnnotator" />
+            implementationClass="com.galua.teal.language.annotator.TealAnnotator"/>
         <notificationGroup
             id="Teal"
             displayType="BALLOON"
-            isLogByDefault="true" />
+            isLogByDefault="true"/>
     </extensions>
 
     <actions>
         <group id="Teal.Tools" text="Teal" description="Teal commands">
-            <add-to-group group-id="ToolsMenu" anchor="last" />
-            <add-to-group group-id="EditorPopupMenu" anchor="last" />
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
 
             <action
                 id="Teal.Check"
                 class="com.galua.teal.language.actions.TealCheckAction"
                 text="Teal: Check"
-                description="Run tl check on the current file" />
+                description="Run tl check on the current file"/>
             <action
                 id="Teal.Gen"
                 class="com.galua.teal.language.actions.TealGenAction"
                 text="Teal: Gen"
-                description="Run tl gen on the current file" />
+                description="Run tl gen on the current file"/>
             <action
                 id="Teal.Run"
                 class="com.galua.teal.language.actions.TealRunAction"
                 text="Teal: Run"
-                description="Run tl run on the current file" />
+                description="Run tl run on the current file"/>
         </group>
     </actions>
+
 </idea-plugin>

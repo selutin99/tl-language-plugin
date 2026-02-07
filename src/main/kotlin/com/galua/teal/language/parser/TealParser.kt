@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
+ * SPDX-License-Identifier: MIT
+ */
 package com.galua.teal.language.parser
 
 import com.galua.teal.language.lexer.TealTokenTypes
@@ -7,6 +11,7 @@ import com.intellij.lang.PsiParser
 import com.intellij.psi.tree.IElementType
 
 class TealParser : PsiParser {
+
     override fun parse(root: IElementType, builder: PsiBuilder): ASTNode {
         val rootMarker = builder.mark()
         parseFile(builder)

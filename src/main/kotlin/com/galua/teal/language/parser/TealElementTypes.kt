@@ -1,9 +1,14 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
+ * SPDX-License-Identifier: MIT
+ */
 package com.galua.teal.language.parser
 
 import com.galua.teal.language.core.TealLanguage
 import com.intellij.psi.tree.IFileElementType
 
 object TealElementTypes {
+
     val FILE = IFileElementType(TealLanguage)
     val LOCAL_DECLARATION = TealElementType("LOCAL_DECLARATION")
     val TYPE_REFERENCE = TealElementType("TYPE_REFERENCE")

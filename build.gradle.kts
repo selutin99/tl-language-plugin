@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.9.24"
-    id("org.jetbrains.intellij") version "1.17.3"
+    kotlin("jvm")
+    id("org.jetbrains.intellij")
 }
 
 group = "com.galua.teal"
@@ -10,11 +10,11 @@ repositories {
     mavenCentral()
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 intellij {
     version.set("2023.3")
     type.set("IC")
-}
-
-kotlin {
-    jvmToolchain(17)
 }

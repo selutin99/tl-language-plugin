@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
+ * SPDX-License-Identifier: MIT
+ */
 package com.galua.teal.language.annotator
 
 import com.galua.teal.language.lexer.TealTokenTypes
@@ -10,6 +14,7 @@ import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 
 class TealAnnotator : Annotator {
+
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         if (element is TealLocalDeclaration) {
             validateLocalDeclaration(element, holder)

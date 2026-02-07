@@ -1,3 +1,7 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
+ * SPDX-License-Identifier: MIT
+ */
 package com.galua.teal.language.parser
 
 import com.galua.teal.language.lexer.TealLexer
@@ -22,6 +26,7 @@ import com.intellij.psi.TokenType
 import com.intellij.psi.tree.TokenSet
 
 class TealParserDefinition : ParserDefinition {
+
     override fun createLexer(project: Project?): Lexer = TealLexer()
 
     override fun createParser(project: Project?): PsiParser = TealParser()
