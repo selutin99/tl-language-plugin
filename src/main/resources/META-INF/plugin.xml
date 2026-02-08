@@ -45,17 +45,17 @@
 
             <action
                 id="Teal.Check"
-                class="com.galua.teal.language.actions.TealCheckAction"
+                class="com.galua.teal.language.actions.impl.TealCheckAction"
                 text="check"
                 description="Run tl check on the current file"/>
             <action
                 id="Teal.Gen"
-                class="com.galua.teal.language.actions.TealGenAction"
+                class="com.galua.teal.language.actions.impl.TealGenAction"
                 text="gen"
                 description="Run tl gen on the current file"/>
             <action
                 id="Teal.Run"
-                class="com.galua.teal.language.actions.TealRunAction"
+                class="com.galua.teal.language.actions.impl.TealRunAction"
                 text="run"
                 description="Run tl run on the current file"/>
         </group>

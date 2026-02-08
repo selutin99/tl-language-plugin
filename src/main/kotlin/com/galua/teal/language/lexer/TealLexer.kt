@@ -144,6 +144,7 @@ class TealLexer : LexerBase() {
                 next == '.' -> 2
                 else -> 1
             }
+
             ':' -> if (next == ':') 2 else 1
             '=' -> if (next == '=') 2 else 1
             '~' -> if (next == '=') 2 else 1
@@ -163,6 +164,7 @@ class TealLexer : LexerBase() {
     }
 
     companion object {
+
         private val KEYWORDS = setOf(
             "and",
             "break",
@@ -192,6 +194,7 @@ class TealLexer : LexerBase() {
             "as",
             "is"
         )
+
         private val TYPE_KEYWORDS = setOf(
             "any",
             "boolean",
@@ -203,7 +206,9 @@ class TealLexer : LexerBase() {
             "userdata",
             "function"
         )
+
         private val BRACKETS = setOf('(', ')', '[', ']', '{', '}')
+
         private val PUNCTUATION_SINGLE = setOf(',', ';', ':', '.')
     }
 }

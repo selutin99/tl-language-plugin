@@ -71,18 +71,22 @@ class TealParser : PsiParser {
                 builder.advanceLexer()
                 marker.done(TealElementTypes.NUMBER_LITERAL)
             }
+
             builder.tokenType == TealTokenTypes.STRING -> {
                 builder.advanceLexer()
                 marker.done(TealElementTypes.STRING_LITERAL)
             }
+
             isKeyword(builder, "true") || isKeyword(builder, "false") -> {
                 builder.advanceLexer()
                 marker.done(TealElementTypes.BOOLEAN_LITERAL)
             }
+
             builder.tokenType == TealTokenTypes.IDENTIFIER -> {
                 builder.advanceLexer()
                 marker.done(TealElementTypes.IDENTIFIER)
             }
+
             else -> marker.drop()
         }
     }

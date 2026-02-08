@@ -12,7 +12,9 @@ import com.intellij.psi.PsiElement
 open class TealPsiElement(node: ASTNode) : ASTWrapperPsiElement(node)
 
 class TealLocalDeclaration(node: ASTNode) : TealPsiElement(node) {
+
     fun typeReference(): TealTypeReference? = findChildByClass(TealTypeReference::class.java)
+
     fun initializer(): PsiElement? = children.firstOrNull { child ->
         child.node.elementType == TealElementTypes.NUMBER_LITERAL ||
             child.node.elementType == TealElementTypes.STRING_LITERAL ||

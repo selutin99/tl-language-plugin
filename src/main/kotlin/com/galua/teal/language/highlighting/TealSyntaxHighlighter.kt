@@ -33,46 +33,67 @@ class TealSyntaxHighlighter : SyntaxHighlighterBase() {
     }
 
     companion object {
-        private val KEYWORD_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
-            "TEAL_KEYWORD",
-            DefaultLanguageHighlighterColors.KEYWORD
-        ))
-        private val STRING_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
-            "TEAL_STRING",
-            DefaultLanguageHighlighterColors.STRING
-        ))
-        private val TYPE_KEYS = arrayOf<TextAttributesKey>(TextAttributesKey.createTextAttributesKey(
-            "TEAL_TYPE",
-            DefaultLanguageHighlighterColors.KEYWORD
-        ))
-        private val NUMBER_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
-            "TEAL_NUMBER",
-            DefaultLanguageHighlighterColors.NUMBER
-        ))
-        private val COMMENT_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
-            "TEAL_COMMENT",
-            DefaultLanguageHighlighterColors.LINE_COMMENT
-        ))
-        private val IDENTIFIER_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
-            "TEAL_IDENTIFIER",
-            DefaultLanguageHighlighterColors.IDENTIFIER
-        ))
-        private val OPERATOR_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
-            "TEAL_OPERATOR",
-            DefaultLanguageHighlighterColors.OPERATION_SIGN
-        ))
-        private val BRACKET_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
-            "TEAL_BRACKET",
-            DefaultLanguageHighlighterColors.BRACKETS
-        ))
-        private val PUNCTUATION_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
-            "TEAL_PUNCTUATION",
-            DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL
-        ))
-        private val BAD_CHAR_KEYS = arrayOf(TextAttributesKey.createTextAttributesKey(
-            "TEAL_BAD_CHARACTER",
-            HighlighterColors.BAD_CHARACTER
-        ))
+
+        private val KEYWORD_KEYS = arrayOf(
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_KEYWORD",
+                DefaultLanguageHighlighterColors.KEYWORD
+            )
+        )
+        private val STRING_KEYS = arrayOf(
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_STRING",
+                DefaultLanguageHighlighterColors.STRING
+            )
+        )
+        private val TYPE_KEYS = arrayOf<TextAttributesKey>(
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_TYPE",
+                DefaultLanguageHighlighterColors.KEYWORD
+            )
+        )
+        private val NUMBER_KEYS = arrayOf(
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_NUMBER",
+                DefaultLanguageHighlighterColors.NUMBER
+            )
+        )
+        private val COMMENT_KEYS = arrayOf(
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_COMMENT",
+                DefaultLanguageHighlighterColors.LINE_COMMENT
+            )
+        )
+        private val IDENTIFIER_KEYS = arrayOf(
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_IDENTIFIER",
+                DefaultLanguageHighlighterColors.IDENTIFIER
+            )
+        )
+        private val OPERATOR_KEYS = arrayOf(
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_OPERATOR",
+                DefaultLanguageHighlighterColors.OPERATION_SIGN
+            )
+        )
+        private val BRACKET_KEYS = arrayOf(
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_BRACKET",
+                DefaultLanguageHighlighterColors.BRACKETS
+            )
+        )
+        private val PUNCTUATION_KEYS = arrayOf(
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_PUNCTUATION",
+                DefaultLanguageHighlighterColors.PREDEFINED_SYMBOL
+            )
+        )
+        private val BAD_CHAR_KEYS = arrayOf(
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_BAD_CHARACTER",
+                HighlighterColors.BAD_CHARACTER
+            )
+        )
         private val EMPTY = emptyArray<TextAttributesKey>()
     }
 }
