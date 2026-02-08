@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     id("org.jetbrains.intellij")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 group = "com.galua.teal"
@@ -17,4 +18,11 @@ kotlin {
 intellij {
     version.set("2023.3")
     type.set("IC")
+}
+
+ktlint {
+    version.set("1.2.1")
+    verbose.set(true)
+    outputToConsole.set(true)
+    ignoreFailures.set(false)
 }

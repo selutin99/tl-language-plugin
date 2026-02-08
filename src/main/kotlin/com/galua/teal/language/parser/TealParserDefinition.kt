@@ -6,7 +6,14 @@ package com.galua.teal.language.parser
 
 import com.galua.teal.language.lexer.TealLexer
 import com.galua.teal.language.lexer.TealTokenTypes
-import com.galua.teal.language.psi.*
+import com.galua.teal.language.psi.TealBooleanLiteral
+import com.galua.teal.language.psi.TealFile
+import com.galua.teal.language.psi.TealIdentifierExpression
+import com.galua.teal.language.psi.TealLocalDeclaration
+import com.galua.teal.language.psi.TealNumberLiteral
+import com.galua.teal.language.psi.TealPsiElement
+import com.galua.teal.language.psi.TealStringLiteral
+import com.galua.teal.language.psi.TealTypeReference
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
 import com.intellij.lang.PsiParser
