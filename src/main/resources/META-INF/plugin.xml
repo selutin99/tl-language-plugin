@@ -33,24 +33,30 @@
     </extensions>
 
     <actions>
-        <group id="Teal.Tools" text="Teal" description="Teal commands">
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        <group
+            id="Teal.Context"
+            class="com.galua.teal.language.actions.TealActionGroup"
+            text="Teal"
+            description="Teal commands"
+            popup="true"
+            icon="/icons/tealFile.svg">
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
 
             <action
                 id="Teal.Check"
                 class="com.galua.teal.language.actions.TealCheckAction"
-                text="Teal: Check"
+                text="check"
                 description="Run tl check on the current file"/>
             <action
                 id="Teal.Gen"
                 class="com.galua.teal.language.actions.TealGenAction"
-                text="Teal: Gen"
+                text="gen"
                 description="Run tl gen on the current file"/>
             <action
                 id="Teal.Run"
                 class="com.galua.teal.language.actions.TealRunAction"
-                text="Teal: Run"
+                text="run"
                 description="Run tl run on the current file"/>
         </group>
     </actions>
