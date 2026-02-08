@@ -4,6 +4,8 @@
  */
 package com.galua.teal.language.actions
 
+import com.galua.teal.language.core.TealConstants.TEAL_FILE_EXTENSION
+import com.galua.teal.language.core.TealConstants.TEAL_NAME
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.filters.TextConsoleBuilderFactory
@@ -31,8 +33,8 @@ class TealGenAction : AnAction() {
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
         val file = event.getData(CommonDataKeys.VIRTUAL_FILE)
-        if (file == null || file.extension != "tl") {
-            notify(project, "Teal", "Select a .tl file to run tl gen.", NotificationType.WARNING)
+        if (file == null || file.extension != TEAL_FILE_EXTENSION) {
+            notify(project, TEAL_NAME, "Select a .tl file to run tl gen.", NotificationType.WARNING)
             return
         }
 
@@ -46,7 +48,7 @@ class TealGenAction : AnAction() {
                 if (output.exitCode == 0) {
                     notify(
                         project,
-                        "Teal",
+                        TEAL_NAME,
                         "Generated ${file.nameWithoutExtension}.lua",
                         NotificationType.INFORMATION
                     )
@@ -63,12 +65,12 @@ class TealGenAction : AnAction() {
 
     override fun update(event: AnActionEvent) {
         val file = event.getData(CommonDataKeys.VIRTUAL_FILE)
-        event.presentation.isEnabledAndVisible = file?.extension == "tl"
+        event.presentation.isEnabledAndVisible = file?.extension == TEAL_FILE_EXTENSION
     }
 
     private fun notify(project: Project, title: String, content: String, type: NotificationType) {
         NotificationGroupManager.getInstance()
-            .getNotificationGroup("Teal")
+            .getNotificationGroup(TEAL_NAME)
             .createNotification(title, content, type)
             .notify(project)
     }
@@ -79,8 +81,8 @@ abstract class TealConsoleCommandAction(private val command: String) : AnAction(
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
         val file = event.getData(CommonDataKeys.VIRTUAL_FILE)
-        if (file == null || file.extension != "tl") {
-            notify(project, "Teal", "Select a .tl file to run tl $command.", NotificationType.WARNING)
+        if (file == null || file.extension != TEAL_FILE_EXTENSION) {
+            notify(project, TEAL_NAME, "Select a .tl file to run tl $command.", NotificationType.WARNING)
             return
         }
 
@@ -95,7 +97,7 @@ abstract class TealConsoleCommandAction(private val command: String) : AnAction(
             console,
             processHandler,
             console.component,
-            "Teal $command: ${file.name}"
+            "$TEAL_NAME $command: ${file.name}"
         )
         RunContentManager.getInstance(project)
             .showRunContent(DefaultRunExecutor.getRunExecutorInstance(), descriptor)
@@ -105,12 +107,12 @@ abstract class TealConsoleCommandAction(private val command: String) : AnAction(
 
     override fun update(event: AnActionEvent) {
         val file = event.getData(CommonDataKeys.VIRTUAL_FILE)
-        event.presentation.isEnabledAndVisible = file?.extension == "tl"
+        event.presentation.isEnabledAndVisible = file?.extension == TEAL_FILE_EXTENSION
     }
 
     private fun notify(project: Project, title: String, content: String, type: NotificationType) {
         NotificationGroupManager.getInstance()
-            .getNotificationGroup("Teal")
+            .getNotificationGroup(TEAL_NAME)
             .createNotification(title, content, type)
             .notify(project)
     }
