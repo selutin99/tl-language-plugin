@@ -10,7 +10,6 @@ import com.intellij.openapi.fileTypes.LanguageFileType
 import javax.swing.Icon
 
 object TealFileType : LanguageFileType(TealLanguage) {
-
     override fun getName(): String = TEAL_NAME
 
     override fun getDescription(): String = "Teal language file"

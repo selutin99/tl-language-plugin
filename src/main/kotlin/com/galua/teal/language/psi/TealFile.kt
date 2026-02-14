@@ -10,7 +10,6 @@ import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
 
 class TealFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, TealLanguage) {
-
     override fun getFileType() = TealFileType
 
     override fun toString(): String = "Teal File"

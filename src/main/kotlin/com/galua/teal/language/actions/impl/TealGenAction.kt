@@ -14,7 +14,6 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 
 class TealGenAction : TealFileAction() {
-
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
         val file = super.selectedTealFile(event)
@@ -25,26 +24,28 @@ class TealGenAction : TealFileAction() {
 
         object : Task.Backgroundable(project, "Running tl gen", false) {
             override fun run(indicator: ProgressIndicator) {
-                val commandLine = GeneralCommandLine("tl", "gen", file.path)
-                    .withWorkDirectory(file.parent.path)
+                val commandLine =
+                    GeneralCommandLine("tl", "gen", file.path)
+                        .withWorkDirectory(file.parent.path)
                 val processHandler = CapturingProcessHandler(commandLine)
                 val output = processHandler.runProcess()
 
                 if (output.exitCode == 0) {
                     TealActionNotifications.info(
                         project,
-                        "Generated ${file.nameWithoutExtension}.lua"
+                        "Generated ${file.nameWithoutExtension}.lua",
                     )
                 } else {
-                    val details = listOf(output.stderr, output.stdout)
-                        .filter { it.isNotBlank() }
-                        .joinToString("\n")
-                        .ifBlank { "tl gen failed with exit code ${output.exitCode}." }
+                    val details =
+                        listOf(output.stderr, output.stdout)
+                            .filter { it.isNotBlank() }
+                            .joinToString("\n")
+                            .ifBlank { "tl gen failed with exit code ${output.exitCode}." }
                     TealActionNotifications.notify(
                         project,
                         "Teal gen failed",
                         details.trim(),
-                        NotificationType.ERROR
+                        NotificationType.ERROR,
                     )
                 }
             }

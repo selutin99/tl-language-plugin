@@ -10,23 +10,37 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 
 object TealActionNotifications {
-
-    fun notify(project: Project, title: String, content: String, type: NotificationType) {
+    fun notify(
+        project: Project,
+        title: String,
+        content: String,
+        type: NotificationType,
+    ) {
         NotificationGroupManager.getInstance()
             .getNotificationGroup(TEAL_NAME)
             .createNotification(title, content, type)
             .notify(project)
     }
 
-    fun warn(project: Project, message: String) {
+    fun warn(
+        project: Project,
+        message: String,
+    ) {
         notify(project, TEAL_NAME, message, NotificationType.WARNING)
     }
 
-    fun info(project: Project, message: String) {
+    fun info(
+        project: Project,
+        message: String,
+    ) {
         notify(project, TEAL_NAME, message, NotificationType.INFORMATION)
     }
 
-    fun error(project: Project, title: String, message: String) {
+    fun error(
+        project: Project,
+        title: String,
+        message: String,
+    ) {
         notify(project, title, message, NotificationType.ERROR)
     }
 }

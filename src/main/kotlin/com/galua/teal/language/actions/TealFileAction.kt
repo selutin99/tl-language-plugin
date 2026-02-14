@@ -11,7 +11,6 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.vfs.VirtualFile
 
 abstract class TealFileAction : AnAction() {
-
     protected fun selectedTealFile(event: AnActionEvent): VirtualFile? {
         val file = event.getData(CommonDataKeys.VIRTUAL_FILE)
         return if (file?.extension == TEAL_FILE_EXTENSION) file else null

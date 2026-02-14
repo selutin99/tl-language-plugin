@@ -9,7 +9,6 @@ import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 
 class TealLexer : LexerBase() {
-
     private var buffer: CharSequence = ""
     private var startOffset: Int = 0
     private var endOffset: Int = 0
@@ -17,7 +16,12 @@ class TealLexer : LexerBase() {
     private var tokenEnd: Int = 0
     private var tokenType: IElementType? = null
 
-    override fun start(buffer: CharSequence, startOffset: Int, endOffset: Int, initialState: Int) {
+    override fun start(
+        buffer: CharSequence,
+        startOffset: Int,
+        endOffset: Int,
+        initialState: Int,
+    ) {
         this.buffer = buffer
         this.startOffset = startOffset
         this.endOffset = endOffset
@@ -98,22 +102,24 @@ class TealLexer : LexerBase() {
         val operatorLength = operatorLengthAt(tokenStart)
         if (operatorLength > 0) {
             tokenEnd = tokenStart + operatorLength
-            tokenType = if (PUNCTUATION_SINGLE.contains(current)) {
-                TealTokenTypes.PUNCTUATION
-            } else {
-                TealTokenTypes.OPERATOR
-            }
+            tokenType =
+                if (PUNCTUATION_SINGLE.contains(current)) {
+                    TealTokenTypes.PUNCTUATION
+                } else {
+                    TealTokenTypes.OPERATOR
+                }
             return
         }
 
         if (current.isIdentifierStart()) {
             tokenEnd = consumeWhile(tokenStart) { it.isIdentifierPart() }
             val text = buffer.subSequence(tokenStart, tokenEnd).toString()
-            tokenType = when {
-                KEYWORDS.contains(text) -> TealTokenTypes.KEYWORD
-                TYPE_KEYWORDS.contains(text) -> TealTokenTypes.TYPE
-                else -> TealTokenTypes.IDENTIFIER
-            }
+            tokenType =
+                when {
+                    KEYWORDS.contains(text) -> TealTokenTypes.KEYWORD
+                    TYPE_KEYWORDS.contains(text) -> TealTokenTypes.TYPE
+                    else -> TealTokenTypes.IDENTIFIER
+                }
             return
         }
 
@@ -121,7 +127,10 @@ class TealLexer : LexerBase() {
         tokenType = TokenType.BAD_CHARACTER
     }
 
-    private fun consumeWhile(startIndex: Int, predicate: (Char) -> Boolean): Int {
+    private fun consumeWhile(
+        startIndex: Int,
+        predicate: (Char) -> Boolean,
+    ): Int {
         var index = startIndex
         while (index < endOffset && predicate(buffer[index])) {
             index++
@@ -139,11 +148,12 @@ class TealLexer : LexerBase() {
         val nextNext = if (startIndex + 2 < endOffset) buffer[startIndex + 2] else null
 
         return when (current) {
-            '.' -> when {
-                next == '.' && nextNext == '.' -> 3
-                next == '.' -> 2
-                else -> 1
-            }
+            '.' ->
+                when {
+                    next == '.' && nextNext == '.' -> 3
+                    next == '.' -> 2
+                    else -> 1
+                }
 
             ':' -> if (next == ':') 2 else 1
             '=' -> if (next == '=') 2 else 1
@@ -164,48 +174,51 @@ class TealLexer : LexerBase() {
     }
 
     companion object {
+        private val KEYWORDS =
+            setOf(
+                "and",
+                "break",
+                "do",
+                "else",
+                "elseif",
+                "end",
+                "false",
+                "for",
+                "function",
+                "goto",
+                "if",
+                "in",
+                "local",
+                "nil",
+                "not",
+                "or",
+                "repeat",
+                "return",
+                "then",
+                "true",
+                "until",
+                "while",
+                "record",
+                "enum",
+                "interface",
+                "type",
+                "as",
+                "is",
+                "where",
+            )
 
-        private val KEYWORDS = setOf(
-            "and",
-            "break",
-            "do",
-            "else",
-            "elseif",
-            "end",
-            "false",
-            "for",
-            "function",
-            "goto",
-            "if",
-            "in",
-            "local",
-            "nil",
-            "not",
-            "or",
-            "repeat",
-            "return",
-            "then",
-            "true",
-            "until",
-            "while",
-            "record",
-            "enum",
-            "type",
-            "as",
-            "is"
-        )
-
-        private val TYPE_KEYWORDS = setOf(
-            "any",
-            "boolean",
-            "integer",
-            "number",
-            "string",
-            "table",
-            "thread",
-            "userdata",
-            "function"
-        )
+        private val TYPE_KEYWORDS =
+            setOf(
+                "any",
+                "boolean",
+                "integer",
+                "number",
+                "string",
+                "table",
+                "thread",
+                "userdata",
+                "function",
+            )
 
         private val BRACKETS = setOf('(', ')', '[', ']', '{', '}')
 
