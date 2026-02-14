@@ -21,6 +21,7 @@ class TealGenAction : TealFileAction() {
             TealActionNotifications.warn(project, "Select a .tl file to run tl gen.")
             return
         }
+        saveFileIfNeeded(file)
 
         object : Task.Backgroundable(project, "Running tl gen", false) {
             override fun run(indicator: ProgressIndicator) {

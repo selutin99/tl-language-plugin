@@ -22,6 +22,7 @@ abstract class TealConsoleCommandAction(private val command: String) : TealFileA
             TealActionNotifications.warn(project, "Select a .tl file to run tl $command.")
             return
         }
+        saveFileIfNeeded(file)
 
         val console =
             TextConsoleBuilderFactory.getInstance().createBuilder(project).console
