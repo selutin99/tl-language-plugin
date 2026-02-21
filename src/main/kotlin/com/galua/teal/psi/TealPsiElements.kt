@@ -9,9 +9,9 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 
-open class TealPsiElement(node: ASTNode) : ASTWrapperPsiElement(node)
+open class TealPsiElementBase(node: ASTNode) : ASTWrapperPsiElement(node)
 
-class TealLocalDeclaration(node: ASTNode) : TealPsiElement(node) {
+class TealLocalDeclaration(node: ASTNode) : TealPsiElementBase(node) {
     fun typeReference(): TealTypeReference? = findChildByClass(TealTypeReference::class.java)
 
     fun initializer(): PsiElement? =
@@ -23,40 +23,40 @@ class TealLocalDeclaration(node: ASTNode) : TealPsiElement(node) {
         }
 }
 
-class TealEnumDeclaration(node: ASTNode) : TealPsiElement(node)
+class TealEnumDeclaration(node: ASTNode) : TealPsiElementBase(node)
 
-class TealRecordDeclaration(node: ASTNode) : TealPsiElement(node)
+class TealRecordDeclaration(node: ASTNode) : TealPsiElementBase(node)
 
-class TealInterfaceDeclaration(node: ASTNode) : TealPsiElement(node)
+class TealInterfaceDeclaration(node: ASTNode) : TealPsiElementBase(node)
 
-class TealRecordField(node: ASTNode) : TealPsiElement(node) {
+class TealRecordField(node: ASTNode) : TealPsiElementBase(node) {
     fun typeReference(): TealTypeReference? = findChildByClass(TealTypeReference::class.java)
 }
 
-class TealTypeReference(node: ASTNode) : TealPsiElement(node)
+class TealTypeReference(node: ASTNode) : TealPsiElementBase(node)
 
-class TealTypeIdentifier(node: ASTNode) : TealPsiElement(node)
+class TealTypeIdentifier(node: ASTNode) : TealPsiElementBase(node)
 
-class TealNamedType(node: ASTNode) : TealPsiElement(node)
+class TealNamedType(node: ASTNode) : TealPsiElementBase(node)
 
-class TealGenericParameter(node: ASTNode) : TealPsiElement(node)
+class TealGenericParameter(node: ASTNode) : TealPsiElementBase(node)
 
-class TealFunctionType(node: ASTNode) : TealPsiElement(node)
+class TealFunctionType(node: ASTNode) : TealPsiElementBase(node)
 
-class TealMapType(node: ASTNode) : TealPsiElement(node)
+class TealMapType(node: ASTNode) : TealPsiElementBase(node)
 
-class TealArrayType(node: ASTNode) : TealPsiElement(node)
+class TealArrayType(node: ASTNode) : TealPsiElementBase(node)
 
-class TealTupleType(node: ASTNode) : TealPsiElement(node)
+class TealTupleType(node: ASTNode) : TealPsiElementBase(node)
 
-class TealWhereClause(node: ASTNode) : TealPsiElement(node)
+class TealWhereClause(node: ASTNode) : TealPsiElementBase(node)
 
-class TealIsClause(node: ASTNode) : TealPsiElement(node)
+class TealIsClause(node: ASTNode) : TealPsiElementBase(node)
 
-class TealNumberLiteral(node: ASTNode) : TealPsiElement(node)
+class TealNumberLiteral(node: ASTNode) : TealPsiElementBase(node)
 
-class TealStringLiteral(node: ASTNode) : TealPsiElement(node)
+class TealStringLiteral(node: ASTNode) : TealPsiElementBase(node)
 
-class TealBooleanLiteral(node: ASTNode) : TealPsiElement(node)
+class TealBooleanLiteral(node: ASTNode) : TealPsiElementBase(node)
 
-class TealIdentifierExpression(node: ASTNode) : TealPsiElement(node)
+class TealIdentifierExpression(node: ASTNode) : TealPsiElementBase(node)
