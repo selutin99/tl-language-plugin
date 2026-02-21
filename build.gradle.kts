@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     id("org.jetbrains.intellij")
+    id("org.jetbrains.grammarkit")
     id("org.jlleitschuh.gradle.ktlint")
 }
 
@@ -15,9 +16,21 @@ kotlin {
     jvmToolchain(17)
 }
 
+sourceSets {
+    main {
+        java.srcDirs(
+            "src/main/gen"
+        )
+    }
+}
+
 intellij {
     version.set("2023.3")
     type.set("IC")
+}
+
+grammarKit {
+    jflexRelease.set("1.9.1")
 }
 
 ktlint {

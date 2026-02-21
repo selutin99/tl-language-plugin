@@ -2,10 +2,10 @@
  * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
  * SPDX-License-Identifier: MIT
  */
-package com.galua.teal.language.highlighting
+package com.galua.teal.highlighting
 
-import com.galua.teal.language.lexer.TealLexer
-import com.galua.teal.language.lexer.TealTokenTypes
+import com.galua.teal.lexer.TealLexer
+import com.galua.teal.lexer.TealTokenTypes
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.HighlighterColors

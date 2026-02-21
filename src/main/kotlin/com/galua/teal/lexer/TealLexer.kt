@@ -2,7 +2,7 @@
  * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
  * SPDX-License-Identifier: MIT
  */
-package com.galua.teal.language.lexer
+package com.galua.teal.lexer
 
 import com.intellij.lexer.LexerBase
 import com.intellij.psi.TokenType

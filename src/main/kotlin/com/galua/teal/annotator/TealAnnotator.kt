@@ -2,15 +2,15 @@
  * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
  * SPDX-License-Identifier: MIT
  */
-package com.galua.teal.language.annotator
+package com.galua.teal.annotator
 
-import com.galua.teal.language.highlighting.TealSyntaxHighlighter
-import com.galua.teal.language.lexer.TealTokenTypes
-import com.galua.teal.language.parser.TealElementTypes
-import com.galua.teal.language.psi.TealGenericParameter
-import com.galua.teal.language.psi.TealLocalDeclaration
-import com.galua.teal.language.psi.TealTypeIdentifier
-import com.galua.teal.language.psi.TealTypeReference
+import com.galua.teal.highlighting.TealSyntaxHighlighter
+import com.galua.teal.lexer.TealTokenTypes
+import com.galua.teal.parser.TealElementTypes
+import com.galua.teal.psi.TealGenericParameter
+import com.galua.teal.psi.TealLocalDeclaration
+import com.galua.teal.psi.TealTypeIdentifier
+import com.galua.teal.psi.TealTypeReference
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity

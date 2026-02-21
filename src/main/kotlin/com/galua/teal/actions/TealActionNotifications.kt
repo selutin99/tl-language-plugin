@@ -2,9 +2,9 @@
  * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
  * SPDX-License-Identifier: MIT
  */
-package com.galua.teal.language.actions
+package com.galua.teal.actions
 
-import com.galua.teal.language.core.TealConstants.TEAL_NAME
+import com.galua.teal.core.TealConstants.TEAL_NAME
 import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project

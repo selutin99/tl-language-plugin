@@ -2,31 +2,31 @@
  * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
  * SPDX-License-Identifier: MIT
  */
-package com.galua.teal.language.parser
+package com.galua.teal.parser
 
-import com.galua.teal.language.lexer.TealLexer
-import com.galua.teal.language.lexer.TealTokenTypes
-import com.galua.teal.language.psi.TealArrayType
-import com.galua.teal.language.psi.TealBooleanLiteral
-import com.galua.teal.language.psi.TealEnumDeclaration
-import com.galua.teal.language.psi.TealFile
-import com.galua.teal.language.psi.TealFunctionType
-import com.galua.teal.language.psi.TealGenericParameter
-import com.galua.teal.language.psi.TealIdentifierExpression
-import com.galua.teal.language.psi.TealInterfaceDeclaration
-import com.galua.teal.language.psi.TealIsClause
-import com.galua.teal.language.psi.TealLocalDeclaration
-import com.galua.teal.language.psi.TealMapType
-import com.galua.teal.language.psi.TealNamedType
-import com.galua.teal.language.psi.TealNumberLiteral
-import com.galua.teal.language.psi.TealPsiElement
-import com.galua.teal.language.psi.TealRecordDeclaration
-import com.galua.teal.language.psi.TealRecordField
-import com.galua.teal.language.psi.TealStringLiteral
-import com.galua.teal.language.psi.TealTupleType
-import com.galua.teal.language.psi.TealTypeIdentifier
-import com.galua.teal.language.psi.TealTypeReference
-import com.galua.teal.language.psi.TealWhereClause
+import com.galua.teal.lexer.TealLexer
+import com.galua.teal.lexer.TealTokenTypes
+import com.galua.teal.psi.TealArrayType
+import com.galua.teal.psi.TealBooleanLiteral
+import com.galua.teal.psi.TealEnumDeclaration
+import com.galua.teal.psi.TealFile
+import com.galua.teal.psi.TealFunctionType
+import com.galua.teal.psi.TealGenericParameter
+import com.galua.teal.psi.TealIdentifierExpression
+import com.galua.teal.psi.TealInterfaceDeclaration
+import com.galua.teal.psi.TealIsClause
+import com.galua.teal.psi.TealLocalDeclaration
+import com.galua.teal.psi.TealMapType
+import com.galua.teal.psi.TealNamedType
+import com.galua.teal.psi.TealNumberLiteral
+import com.galua.teal.psi.TealPsiElement
+import com.galua.teal.psi.TealRecordDeclaration
+import com.galua.teal.psi.TealRecordField
+import com.galua.teal.psi.TealStringLiteral
+import com.galua.teal.psi.TealTupleType
+import com.galua.teal.psi.TealTypeIdentifier
+import com.galua.teal.psi.TealTypeReference
+import com.galua.teal.psi.TealWhereClause
 import com.intellij.lang.ASTNode
 import com.intellij.lang.ParserDefinition
 import com.intellij.lang.PsiParser

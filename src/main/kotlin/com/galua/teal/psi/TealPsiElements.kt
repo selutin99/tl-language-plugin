@@ -2,9 +2,9 @@
  * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
  * SPDX-License-Identifier: MIT
  */
-package com.galua.teal.language.psi
+package com.galua.teal.psi
 
-import com.galua.teal.language.parser.TealElementTypes
+import com.galua.teal.parser.TealElementTypes
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement

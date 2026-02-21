@@ -2,10 +2,10 @@
  * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
  * SPDX-License-Identifier: MIT
  */
-package com.galua.teal.language.actions.impl
+package com.galua.teal.actions.impl
 
-import com.galua.teal.language.actions.TealActionNotifications
-import com.galua.teal.language.actions.TealFileAction
+import com.galua.teal.actions.TealActionNotifications
+import com.galua.teal.actions.TealFileAction
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessHandler
 import com.intellij.notification.NotificationType

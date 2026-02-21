@@ -1,0 +1,660 @@
+/*
+ * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
+ * SPDX-License-Identifier: MIT
+ */
+{
+  parserClass="com.galua.teal.parser.TealParser"
+
+  implements="com.galua.teal.psi.TealPsiElement"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Teal"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.galua.teal.psi"
+  psiImplPackage="com.galua.teal.psi.impl"
+  psiImplUtilClass="com.galua.teal.psi.TealPsiImplUtilKt"
+
+  parserUtilClass="com.galua.teal.psi.TealParserUtil"
+  elementTypeHolderClass="com.galua.teal.psi.TealTypes"
+  elementTypeClass="com.galua.teal.psi.TealElementType"
+  elementTypeFactory="com.galua.teal.lang.TealParserDefinitionKt.createType"
+  tokenTypeClass="com.galua.teal.psi.TealTokenType"
+  tokenTypeFactory="com.galua.teal.lang.TealParserDefinitionKt.createToken"
+  parserImports = "static com.intellij.lang.WhitespacesBinders.*"
+
+  tokens = [
+        /* Keywords */
+        AND = "and"
+        BREAK = "break"
+        DO = "do"
+        ELSE = "else"
+        ELSEIF = "elseif"
+        END = "end"
+        FALSE = "false"
+        FOR = "for"
+        FUNCTION = "function"
+        IF = "if"
+        IN = "in"
+        LOCAL = "local"
+        NIL = "nil"
+        NOT = "not"
+        OR = "or"
+        REPEAT = "repeat"
+        RETURN = "return"
+        THEN = "then"
+        TRUE = "true"
+        UNTIL = "until"
+        WHILE = "while"
+        REGION = "REGION"
+        ENDREGION = "ENDREGION"
+
+        SHEBANG = "#!"
+        SHEBANG_CONTENT = "SHEBANG_CONTENT"
+        ELLIPSIS = "..."
+        CONCAT = ".."
+        EQ = "=="
+        GE = ">="
+        LE = "<="
+        NE = "~="
+        MINUS = "-"
+        PLUS = "+"
+        MULT = "*"
+        MOD = "%"
+        DIV = "/"
+        ASSIGN = "="
+        GT = ">"
+        LT = "<"
+        LPAREN = "("
+        RPAREN = ")"
+        LBRACK = "["
+        RBRACK = "]"
+        LCURLY = "{"
+        RCURLY = "}"
+        GETN = "#"
+        COMMA = ","
+        SEMI = ";"
+        COLON = ":"
+        DOT = "."
+        EXP = "^"
+
+        SHORT_COMMENT="SHORT_COMMENT"
+        DOC_COMMENT="DOC_COMMENT"
+        BLOCK_COMMENT="BLOCK_COMMENT"
+        ID="regexp:[A-Za-z_][A-Za-z0-9_]*"
+        NUMBER="NUMBER"
+        STRING = "STRING"
+
+        //lua 5.3
+        DOUBLE_COLON = "::"
+        GOTO = "goto"
+        BIT_OR = "|"
+        BIT_AND = "&"
+        BIT_LTLT = "<<"
+        BIT_RTRT = ">>"
+        BIT_TILDE = "~"
+        DOUBLE_DIV = "//"
+  ]
+
+  hooks("localDef|assignStat|tableField") = [leftBinder="MY_LEFT_COMMENT_BINDER" rightBinder="MY_RIGHT_COMMENT_BINDER"]
+  hooks("funcDef|localFuncDef|classMethodDef") = [leftBinder="MY_LEFT_COMMENT_BINDER"]
+  hooks("fieldList") = [leftBinder="GREEDY_LEFT_BINDER" rightBinder="GREEDY_RIGHT_BINDER"]
+  extends(".*Expr") = expr
+  extends(".*Stat") = statement
+  hooks(".*Stat") = [leftBinder="MY_LEFT_COMMENT_BINDER"]
+}
+
+tealFile ::= shebang_line? stat_semi*
+
+shebang_line ::= SHEBANG SHEBANG_CONTENT
+
+private stat_semi ::= <<parseStatement>>
+block ::= stat_semi* {
+    implements = [
+        "com.galua.teal.psi.TealDeclarationScope"
+    ]
+}
+
+fake statement ::= () {
+    implements = "com.galua.teal.psi.TealCommentOwner"
+    methods = [getComment]
+}
+private stat_impl ::=
+    emptyStat |
+    doStat |
+    whileStat |
+    repeatStat |
+    ifStat |
+    forAStat |
+    forBStat |
+    defStat |
+    lastStat |
+    labelStat |
+    gotoStat |
+    typedVarStat |
+    assignStat |
+    exprStat {
+        recoverWhile = stat_recover
+    }
+private stat_recover ::= !(ID
+    | ',' | ';'
+    | 'local' | 'global' | 'type' | 'record' | 'interface' | 'enum'
+    | 'do' | 'while' | 'repeat' | 'function' | 'if' | 'for' | 'return' | break
+    | nil | true | false | STRING | NUMBER | '::' | 'goto'
+    | unaryOp)
+
+emptyStat ::= ';'
+
+varList ::= varExpr (',' varExpr)* {
+    extends = exprList
+    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
+}
+assignStat ::= varList '=' exprList {
+    pin = 2
+    implements = [
+        "com.galua.teal.psi.TealDeclaration"
+    ]
+    methods = [assign = 'ASSIGN' varExprList = '/exprList[0]' valueExprList = '/exprList[1]']
+    mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
+    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
+}
+doStat ::= 'do' <<lazyBlock>> 'end' {
+    pin = 1
+    implements = [
+        "com.galua.teal.psi.TealIndentRange"
+    ]
+    mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
+    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
+}
+whileStat ::= 'while' expr 'do' <<lazyBlock>> 'end' {
+    pin = 1
+    implements = [
+        "com.galua.teal.psi.TealLoop"
+        "com.galua.teal.psi.TealIndentRange"
+    ]
+}
+repeatStat ::= 'repeat' <<lazyBlock>> 'until' expr {
+    pin = 1
+    implements = [
+        "com.galua.teal.psi.TealLoop"
+        "com.galua.teal.psi.TealIndentRange"
+        "com.galua.teal.psi.TealDeclarationScope"
+    ]
+    methods = [
+        until = 'UNTIL'
+    ]
+}
+ifStat ::= 'if' expr 'then' <<lazyBlock>> ('elseif' expr 'then' <<lazyBlock>>)* ('else' <<lazyBlock>>)? 'end' {
+    pin = 1
+    implements = [
+        "com.galua.teal.psi.TealIndentRange"
+    ]
+    mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
+    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
+}
+forAStat ::= 'for' paramNameDef '=' expr ',' expr (',' expr)? 'do' <<lazyBlock>> 'end' {
+    pin = 3
+    methods = [getParamNameDefList]
+    implements = [
+        "com.galua.teal.psi.TealParametersOwner"
+        "com.galua.teal.psi.TealLoop"
+        "com.galua.teal.psi.TealIndentRange"
+        "com.galua.teal.psi.TealDeclarationScope"
+    ]
+}
+forBStat ::= 'for' parList 'in' exprList 'do' <<lazyBlock>> 'end' {
+    pin = 1
+    implements = [
+        "com.galua.teal.psi.TealParametersOwner"
+        "com.galua.teal.psi.TealLoop"
+        "com.galua.teal.psi.TealIndentRange"
+        "com.galua.teal.psi.TealDeclarationScope"
+    ]
+}
+labelStat ::= '::' ID '::' {
+    pin = 1
+    implements = [
+        "com.intellij.psi.PsiNameIdentifierOwner"
+    ]
+    methods = [
+        getNameIdentifier
+        getTextOffset
+        setName
+        getName
+    ]
+}
+gotoStat ::= 'goto' ID {
+    pin = 1
+    methods = [
+        getReferences
+    ]
+}
+private defStat ::= classMethodDef | funcDef | localFuncDef | localDef | typeAliasStat | recordStat | interfaceStat | enumStat
+exprStat ::= expr {
+    mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
+    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
+}
+
+funcDef ::= 'function' ID funcBody {
+    pin = 1
+    implements = [
+        "com.galua.teal.psi.TealClassMethod"
+        "com.galua.teal.psi.TealDeclaration"
+        "com.galua.teal.psi.TealStatement"
+    ]
+    methods = [
+        getComment
+        getPresentation
+        getParamNameDefList
+        getNameIdentifier
+        setName
+        getName
+        getTextOffset
+        toString
+        guessReturnType
+        guessParentType
+        getVisibility
+        getWorth
+        isDeprecated
+        getParams
+        getReferences
+    ]
+    stubClass = "com.galua.teal.stubs.TealFuncStub"
+}
+
+private checkFuncPrefix ::= ID ('.' | ':') ID
+
+left funcPrefixRef ::= '.' <<repeat checkFuncPrefix 1>> ID { extends = indexExpr elementType = indexExpr }
+classMethodName ::=  nameExpr (funcPrefixRef)* (('.' ID) | (':' ID)) {
+    pin = 1
+    methods = [
+        dot = 'DOT'
+        colon = 'COLON'
+    ]
+    stubClass = 'com.galua.teal.stubs.TealPlaceholderStub'
+}
+classMethodDef ::= 'function' classMethodName funcBody {
+    pin = 2
+    implements = [
+        "com.galua.teal.psi.TealClassMethod"
+        "com.galua.teal.psi.TealDeclaration"
+        "com.galua.teal.psi.TealStatement"
+    ]
+    stubClass = "com.galua.teal.stubs.TealClassMethodStub"
+    methods = [
+        getComment
+        guessParentType
+        getVisibility
+        getWorth
+        isDeprecated
+        getParamNameDefList
+        getNameIdentifier
+        setName
+        getName
+        getTextOffset
+        toString
+        guessReturnType
+        getParams
+        isStatic
+        getPresentation
+    ]
+}
+
+localFuncDef ::= 'local' 'function' ID funcBody {
+    pin = 2
+    implements = [
+        "com.galua.teal.psi.TealFuncBodyOwner"
+        "com.galua.teal.psi.TealDeclaration"
+        "com.galua.teal.psi.TealStatement"
+        "com.intellij.psi.PsiNameIdentifierOwner"
+    ]
+    methods = [
+        getComment
+        getParamNameDefList
+        getNameIdentifier
+        setName
+        getName
+        getTextOffset
+        getUseScope
+        guessReturnType
+        getParams
+    ]
+    stubClass = 'com.galua.teal.stubs.TealLocalFuncDefStub'
+}
+attribute ::= '<' ID '>' {
+    pin = 1
+}
+nameList ::= nameDef attribute? (',' nameDef attribute?)* {
+    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
+}
+typedNameDef ::= nameDef typeAnn
+typedNameList ::= typedNameDef attribute? (',' typedNameDef attribute?)* {
+    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
+}
+localDef ::= 'local' (typedNameList | nameList) ('=' exprList)? {
+    pin = 1
+    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
+    implements = [
+        "com.galua.teal.psi.TealDeclaration"
+        "com.galua.teal.psi.TealStatement"
+        "com.galua.teal.psi.TealDeclarationScope"
+    ]
+    methods = [getComment assign = 'ASSIGN']
+}
+
+typedVar ::= varExpr typeAnn
+typedVarList ::= typedVar (',' typedVar)*
+typedVarStat ::= typedVarList ('=' exprList)? {
+    pin = 1
+}
+
+typeAliasStat ::= localTypeAliasStat | globalTypeAliasStat
+localTypeAliasStat ::= 'local' 'type' typeNameDef '=' typeexp {
+    pin = 2
+}
+globalTypeAliasStat ::= 'global' 'type' typeNameDef '=' typeexp {
+    pin = 2
+}
+
+recordStat ::= 'local'? 'record' typeNameDef recordBody 'end' {
+    pin = 2
+}
+recordBody ::= recordField*
+recordField ::= ID typeAnn recordFieldSep?
+recordFieldSep ::= ',' | ';'
+
+interfaceStat ::= 'local'? 'interface' typeNameDef interfaceBody 'end' {
+    pin = 2
+}
+interfaceBody ::= interfaceField*
+interfaceField ::= ID typeAnn interfaceFieldSep?
+interfaceFieldSep ::= ',' | ';'
+
+enumStat ::= 'local'? 'enum' typeNameDef enumBody 'end' {
+    pin = 2
+}
+enumBody ::= enumField*
+enumField ::= (STRING | ID) enumFieldSep?
+enumFieldSep ::= ',' | ';'
+
+returnStat ::= return exprList? {
+    mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
+    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
+}
+breakStat ::= break
+private lastStat ::= returnStat | breakStat
+
+exprList ::= expr (',' expr)* {
+    methods = [guessTypeAt]
+    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
+}
+
+typeAnn ::= ':' typeexp {
+    pin = 1
+}
+typeNameDef ::= ID
+
+typeexp ::= typeUnion
+
+private typeUnion ::= typePostfix ('|' typePostfix)*
+
+private typePostfix ::= typePrimary typeOptional?
+typeOptional ::= '?'
+
+private typePrimary ::= typeFunction
+    | typeMap
+    | typeTuple
+    | typeArray
+    | typeParen
+    | typeNameRef
+
+typeParen ::= '(' typeexp ')' {
+    pin = 1
+}
+
+typeNameRef ::= typeName typeGenericArgs?
+typeName ::= ID | 'self' | 'any' | 'nil'
+typeGenericArgs ::= '<' typeexpList '>' {
+    pin = 1
+}
+
+typeexpList ::= typeexp (',' typeexp)*
+
+typeFunction ::= 'function' typeFuncParams typeFuncReturns?
+typeFuncParams ::= '(' typeexpList? ')' {
+    pin = 1
+}
+typeFuncReturns ::= ':' typeexpList
+
+typeArray ::= '{' typeexp '}' {
+    pin = 1
+}
+typeMap ::= '{' typeexp ':' typeexp '}' {
+    pin = 1
+}
+typeTuple ::= '{' typeexp (',' typeexp)+ '}' {
+    pin = 1
+}
+
+funcReturnType ::= ':' typeexpList {
+    pin = 1
+}
+
+literalExpr ::= nil | false | true | NUMBER | STRING | "..." {
+    mixin = 'com.galua.teal.psi.impl.TealLiteralExprMixin'
+    implements = [
+        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealLiteralExprStub>"
+    ]
+    //stubClass = 'com.galua.teal.stubs.TealExprStub'
+}
+stringExpr ::= STRING {
+    extends = literalExpr
+    elementType = literalExpr
+}
+
+private varExpr ::= primaryExpr
+
+expr ::= <<parseExpr>> {
+    mixin = "com.galua.teal.psi.impl.TealExprMixin"
+    stubClass = "com.galua.teal.stubs.TealExprStub"
+    implements = [
+        "com.galua.teal.psi.TealTypeGuessable"
+    ]
+}
+
+parenExpr ::= '(' expr ')' {
+    pin = 1
+    stubClass = 'com.galua.teal.stubs.TealExprStub'
+    mixin = "com.galua.teal.psi.impl.TealParenExprMixin"
+}
+unaryExpr ::= unaryOp (unaryExpr | primaryExpr) {
+    pin = 1
+    implements = [
+        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealUnaryExprStub>"
+    ]
+    mixin = "com.galua.teal.psi.impl.TealUnaryExprMixin"
+}
+
+left binaryExpr ::= binaryOp expr {
+    pin = 1
+    implements = [
+        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealBinaryExprStub>"
+    ]
+    mixin = "com.galua.teal.psi.impl.TealBinaryExprMixin"
+}
+
+left indexExpr ::= '[' expr ']' | '.' ID | ':' ID {
+    pin(".*") = 1
+    methods = [
+        getNameIdentifier
+        setName
+        getName
+        getTextOffset
+        getPresentation
+        getIdExpr
+        toString
+
+        guessParentType
+        isDeprecated
+
+        dot = 'DOT'
+        colon = 'COLON'
+        lbrack = 'LBRACK'
+    ]
+    implements = [
+        "com.intellij.psi.PsiNameIdentifierOwner"
+        "com.galua.teal.psi.TealClassMember"
+        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealIndexExprStub>"
+    ]
+    mixin = "com.galua.teal.psi.impl.TealIndexExprMixin"
+}
+
+args ::= listArgs | singleArg {
+    stubClass = 'com.galua.teal.stubs.TealPlaceholderStub'
+}
+singleArg ::= tableExpr | stringExpr { extends = args }
+private arg_expr_list ::= (expr ',')* (expr |& ')') { pin = 1 }
+listArgs ::= '(' (arg_expr_list)? ')' { extends = args pin = 1 }
+
+left callExpr ::= args {
+    methods = [
+        guessParentType
+        getFirstStringArg
+
+        isMethodDotCall
+        isMethodColonCall
+        isFunctionCall
+    ]
+    stubClass = 'com.galua.teal.stubs.TealExprStub'
+    mixin = 'com.galua.teal.psi.impl.TealCallExprMixin'
+}
+
+private suffixExpr ::= indexExpr | callExpr
+private prefixExpr ::= parenExpr | nameExpr | tableExpr | literalExpr
+// prefixExpr | callExpr | indexExpr
+private primaryExpr ::= prefixExpr (suffixExpr*)
+
+closureExpr ::= 'function' funcBody {
+    pin = 1
+    implements = [
+        "com.galua.teal.psi.TealFuncBodyOwner"
+        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealClosureExprStub>"
+    ]
+    methods = [getParamNameDefList guessReturnType getParams]
+    mixin = 'com.galua.teal.psi.impl.TealClosureExprMixin'
+}
+
+funcBody ::= '(' (parList)? ')' funcReturnType? <<lazyBlock>>? 'end' {
+    pin = 1
+    implements = [
+        "com.galua.teal.psi.TealIndentRange"
+        "com.galua.teal.psi.TealDeclarationScope"
+    ]
+    methods = [
+        RPAREN = 'RPAREN'
+        ELLIPSIS = 'ELLIPSIS'
+    ]
+    stubClass = 'com.galua.teal.stubs.TealPlaceholderStub'
+}
+
+private parList ::= paramDef (',' paramDef)* (',' '...')? | '...' { recoverWhile = parList_recover }
+private parList_recover ::= !(')'|'in')
+
+tableExpr ::= '{' fieldList '}' {
+    pin = 1
+    methods = [
+        findField
+    ]
+    implements = [
+        "com.galua.teal.psi.TealIndentRange"
+        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealTableExprStub>"
+    ]
+    mixin = "com.galua.teal.psi.impl.TealTableExprMixin"
+}
+
+private fieldList ::= (tableField (tableFieldSep tableField)* (tableFieldSep)?)?
+
+private tableField1 ::= '[' expr ']' '=' expr { pin = 1 }
+private tableField2 ::= ID '=' expr { pin = 2 }
+
+tableField ::= tableField1 | tableField2 | expr {
+    methods = [
+        getNameIdentifier
+        setName
+        getName
+        getTextOffset
+
+        toString
+
+        getFieldName
+        getPresentation
+        guessParentType
+        getVisibility
+        getWorth
+        isDeprecated
+        getComment
+        getIdExpr
+        nameDef = "tableFieldNameDef"
+        lbrack = 'LBRACK'
+    ]
+    stubClass = "com.galua.teal.stubs.TealTableFieldStub"
+    implements = [
+        "com.galua.teal.psi.TealClassField"
+        "com.intellij.psi.PsiNameIdentifierOwner"
+        "com.galua.teal.psi.TealCommentOwner"
+    ]
+    recoverWhile = tableField_recover
+}
+
+private tableField_recover ::= !(tableFieldSep | '}' | '[')
+
+tableFieldSep ::= ',' | ';'
+
+binaryOp ::= '+' | '-' | '*' | '/' | '^' | '%' | '..' |
+    '<' | '<=' | '>' | '>=' | '==' | '~=' | 'as' | 'is' |
+    'and' | 'or'
+    // lua5.3
+    | '|' | '&' | '>>' | '<<' | '~' | '//'
+
+unaryOp ::= '-' | 'not' | '#'
+    // lua5.3
+    | '~'
+
+nameDef ::= ID {
+    implements = [
+        "com.galua.teal.psi.TealNamedElement"
+        "com.galua.teal.psi.TealTypeGuessable"
+        "com.intellij.psi.PsiNameIdentifierOwner"
+    ]
+    methods = [
+        getName
+        setName
+        getNameIdentifier
+        getUseScope
+    ]
+    stubClass = "com.galua.teal.stubs.TealNameDefStub"
+}
+nameExpr ::= ID {
+    implements = [
+        "com.galua.teal.psi.TealPsiElement"
+        "com.intellij.psi.PsiNameIdentifierOwner"
+        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealNameExprStub>"
+        "com.galua.teal.psi.TealModuleClassField"
+    ]
+    methods = [
+        setName
+        getName
+        getNameIdentifier
+        getPresentation
+        getReferences
+        isDeprecated
+
+        toString
+    ]
+    mixin = "com.galua.teal.psi.impl.TealNameExprMixin"
+}
+paramNameDef ::= ID {
+    extends = nameDef
+    stubClass = "com.galua.teal.stubs.TealNameDefStub"
+}
+paramDef ::= typedParamDef | paramNameDef
+typedParamDef ::= paramNameDef typeAnn

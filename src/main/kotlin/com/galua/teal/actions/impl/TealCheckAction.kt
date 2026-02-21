@@ -2,8 +2,8 @@
  * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
  * SPDX-License-Identifier: MIT
  */
-package com.galua.teal.language.actions.impl
+package com.galua.teal.actions.impl
 
-import com.galua.teal.language.actions.TealConsoleCommandAction
+import com.galua.teal.actions.TealConsoleCommandAction
 
 class TealCheckAction : TealConsoleCommandAction(command = "check")

@@ -1,4 +1,4 @@
-package com.galua.teal.language.core
+package com.galua.teal.core
 
 object TealConstants {
     const val TEAL_NAME = "Teal"

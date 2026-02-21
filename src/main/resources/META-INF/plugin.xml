@@ -16,16 +16,16 @@
             name="Teal"
             language="Teal"
             extensions="tl"
-            implementationClass="com.galua.teal.language.core.TealFileType"/>
+            implementationClass="com.galua.teal.core.TealFileType"/>
         <lang.syntaxHighlighterFactory
             language="Teal"
-            implementationClass="com.galua.teal.language.highlighting.TealSyntaxHighlighterFactory"/>
+            implementationClass="com.galua.teal.highlighting.TealSyntaxHighlighterFactory"/>
         <lang.parserDefinition
             language="Teal"
-            implementationClass="com.galua.teal.language.parser.TealParserDefinition"/>
+            implementationClass="com.galua.teal.parser.TealParserDefinition"/>
         <annotator
             language="Teal"
-            implementationClass="com.galua.teal.language.annotator.TealAnnotator"/>
+            implementationClass="com.galua.teal.annotator.TealAnnotator"/>
         <notificationGroup
             id="Teal"
             displayType="BALLOON"
@@ -35,7 +35,7 @@
     <actions>
         <group
             id="Teal.Context"
-            class="com.galua.teal.language.actions.TealActionGroup"
+            class="com.galua.teal.actions.TealActionGroup"
             text="Teal"
             description="Teal commands"
             popup="true"
@@ -45,17 +45,17 @@
 
             <action
                 id="Teal.Check"
-                class="com.galua.teal.language.actions.impl.TealCheckAction"
+                class="com.galua.teal.actions.impl.TealCheckAction"
                 text="check"
                 description="Run tl check on the current file"/>
             <action
                 id="Teal.Gen"
-                class="com.galua.teal.language.actions.impl.TealGenAction"
+                class="com.galua.teal.actions.impl.TealGenAction"
                 text="gen"
                 description="Run tl gen on the current file"/>
             <action
                 id="Teal.Run"
-                class="com.galua.teal.language.actions.impl.TealRunAction"
+                class="com.galua.teal.actions.impl.TealRunAction"
                 text="run"
                 description="Run tl run on the current file"/>
         </group>
