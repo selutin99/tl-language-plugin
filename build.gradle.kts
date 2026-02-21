@@ -40,12 +40,6 @@ ktlint {
     ignoreFailures.set(false)
 }
 
-sourceSets {
-    main {
-        java.srcDir(layout.buildDirectory.dir("generated-src"))
-    }
-}
-
 tasks.named("compileKotlin") {
     dependsOn("generateParser")
 }

@@ -78,8 +78,10 @@ fun getIdExpr(element: PsiElement): PsiElement? =
 fun lbrack(element: PsiElement): PsiElement? =
     element.node.findChildByType(TealTypes.LBRACK)?.psi
 
-fun getFirstStringArg(element: PsiElement): PsiElement? =
-    PsiTreeUtil.findChildOfType(element, TealStringExpr::class.java)
+fun getFirstStringArg(element: PsiElement): PsiElement? {
+    val literal = PsiTreeUtil.findChildOfType(element, TealLiteralExpr::class.java) ?: return null
+    return if (literal.node.findChildByType(TealTypes.STRING) != null) literal else null
+}
 
 fun isMethodDotCall(element: PsiElement): Boolean = false
 

@@ -4,7 +4,6 @@
  */
 package com.galua.teal.psi.impl
 
-import com.galua.teal.stubs.TealExprStub
 import com.intellij.extapi.psi.ASTWrapperPsiElement
 import com.intellij.extapi.psi.StubBasedPsiElementBase
 import com.intellij.lang.ASTNode
@@ -16,20 +15,11 @@ open class TealStatMixin<T : StubElement<*>> : StubBasedPsiElementBase<T> {
     constructor(node: ASTNode) : super(node)
 }
 
-open class TealExprMixin : StubBasedPsiElementBase<TealExprStub> {
-    constructor(stub: TealExprStub, nodeType: IStubElementType<*, *>) : super(stub, nodeType)
-    constructor(node: ASTNode) : super(node)
-}
+open class TealExprMixin(node: ASTNode) : ASTWrapperPsiElement(node)
 
-open class TealParenExprMixin : StubBasedPsiElementBase<TealExprStub> {
-    constructor(stub: TealExprStub, nodeType: IStubElementType<*, *>) : super(stub, nodeType)
-    constructor(node: ASTNode) : super(node)
-}
+open class TealParenExprMixin(node: ASTNode) : ASTWrapperPsiElement(node)
 
-open class TealCallExprMixin : StubBasedPsiElementBase<TealExprStub> {
-    constructor(stub: TealExprStub, nodeType: IStubElementType<*, *>) : super(stub, nodeType)
-    constructor(node: ASTNode) : super(node)
-}
+open class TealCallExprMixin(node: ASTNode) : ASTWrapperPsiElement(node)
 
 open class TealLiteralExprMixin(node: ASTNode) : ASTWrapperPsiElement(node)
 

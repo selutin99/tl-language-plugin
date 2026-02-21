@@ -6,9 +6,7 @@ package com.galua.teal.psi
 
 import com.intellij.psi.PsiNamedElement
 
-interface TealStatement : TealPsiElement
-
-interface TealDeclaration : TealStatement
+interface TealDeclaration : TealPsiElement
 
 interface TealDeclarationScope : TealPsiElement
 

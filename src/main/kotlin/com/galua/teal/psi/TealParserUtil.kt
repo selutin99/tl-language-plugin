@@ -6,10 +6,31 @@ package com.galua.teal.psi
 
 import com.galua.teal.parser.TealParser
 import com.intellij.lang.PsiBuilder
+import com.intellij.lang.WhitespacesAndCommentsBinder
 import com.intellij.lang.parser.GeneratedParserUtilBase
 import com.intellij.psi.tree.IElementType
 
 object TealParserUtil : GeneratedParserUtilBase() {
+    @JvmField
+    val MY_LEFT_COMMENT_BINDER: WhitespacesAndCommentsBinder =
+        WhitespacesAndCommentsBinder { tokens, atStreamEdge, getter ->
+            if (atStreamEdge) return@WhitespacesAndCommentsBinder tokens.size
+            var edge = 0
+            for (i in tokens.size - 1 downTo 0) {
+                val text = getter.get(i).toString()
+                if (text.indexOf('\n') >= 0) {
+                    // Bind only comments/whitespace directly above; stop at the last line break.
+                    edge = i + 1
+                    if (text.contains("\n\n")) break
+                }
+            }
+            edge
+        }
+
+    @JvmField
+    val MY_RIGHT_COMMENT_BINDER: WhitespacesAndCommentsBinder =
+        WhitespacesAndCommentsBinder { _, _, _ -> 0 }
+
     @JvmStatic
     fun parseStatement(builder: PsiBuilder, level: Int): Boolean {
         if (!recursion_guard_(builder, level, "parseStatement")) {

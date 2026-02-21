@@ -31,3 +31,5 @@ build/
 .idea/
 out/
 *.iml
+
+src/main/gen/*

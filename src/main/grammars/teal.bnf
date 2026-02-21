@@ -20,7 +20,10 @@
   elementTypeFactory="com.galua.teal.lang.TealParserDefinitionKt.createType"
   tokenTypeClass="com.galua.teal.psi.TealTokenType"
   tokenTypeFactory="com.galua.teal.lang.TealParserDefinitionKt.createToken"
-  parserImports = "static com.intellij.lang.WhitespacesBinders.*"
+  parserImports = [
+        "static com.intellij.lang.WhitespacesBinders.*"
+        "static com.intellij.lang.parser.GeneratedParserUtilBase.*"
+  ]
 
   tokens = [
         /* Keywords */
@@ -124,7 +127,6 @@ block ::= stat_semi* {
 
 fake statement ::= () {
     implements = "com.galua.teal.psi.TealCommentOwner"
-    methods = [getComment]
 }
 private stat_impl ::=
     emptyStat |
@@ -269,9 +271,7 @@ funcDef ::= 'function' ID funcBody {
     stubClass = "com.galua.teal.stubs.TealFuncStub"
 }
 
-private checkFuncPrefix ::= ID ('.' | ':') ID
-
-left funcPrefixRef ::= '.' <<repeat checkFuncPrefix 1>> ID { extends = indexExpr elementType = indexExpr }
+left funcPrefixRef ::= '.' ID { extends = indexExpr elementType = indexExpr }
 classMethodName ::=  nameExpr (funcPrefixRef)* (('.' ID) | (':' ID)) {
     pin = 1
     methods = [
@@ -449,10 +449,6 @@ funcReturnType ::= ':' typeexpList {
 
 literalExpr ::= nil | false | true | NUMBER | STRING | "..." {
     mixin = 'com.galua.teal.psi.impl.TealLiteralExprMixin'
-    implements = [
-        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealLiteralExprStub>"
-    ]
-    //stubClass = 'com.galua.teal.stubs.TealExprStub'
 }
 stringExpr ::= STRING {
     extends = literalExpr
@@ -463,7 +459,6 @@ private varExpr ::= primaryExpr
 
 expr ::= <<parseExpr>> {
     mixin = "com.galua.teal.psi.impl.TealExprMixin"
-    stubClass = "com.galua.teal.stubs.TealExprStub"
     implements = [
         "com.galua.teal.psi.TealTypeGuessable"
     ]
@@ -471,22 +466,15 @@ expr ::= <<parseExpr>> {
 
 parenExpr ::= '(' expr ')' {
     pin = 1
-    stubClass = 'com.galua.teal.stubs.TealExprStub'
     mixin = "com.galua.teal.psi.impl.TealParenExprMixin"
 }
 unaryExpr ::= unaryOp (unaryExpr | primaryExpr) {
     pin = 1
-    implements = [
-        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealUnaryExprStub>"
-    ]
     mixin = "com.galua.teal.psi.impl.TealUnaryExprMixin"
 }
 
 left binaryExpr ::= binaryOp expr {
     pin = 1
-    implements = [
-        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealBinaryExprStub>"
-    ]
     mixin = "com.galua.teal.psi.impl.TealBinaryExprMixin"
 }
 
@@ -511,7 +499,6 @@ left indexExpr ::= '[' expr ']' | '.' ID | ':' ID {
     implements = [
         "com.intellij.psi.PsiNameIdentifierOwner"
         "com.galua.teal.psi.TealClassMember"
-        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealIndexExprStub>"
     ]
     mixin = "com.galua.teal.psi.impl.TealIndexExprMixin"
 }
@@ -532,7 +519,6 @@ left callExpr ::= args {
         isMethodColonCall
         isFunctionCall
     ]
-    stubClass = 'com.galua.teal.stubs.TealExprStub'
     mixin = 'com.galua.teal.psi.impl.TealCallExprMixin'
 }
 
@@ -545,7 +531,6 @@ closureExpr ::= 'function' funcBody {
     pin = 1
     implements = [
         "com.galua.teal.psi.TealFuncBodyOwner"
-        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealClosureExprStub>"
     ]
     methods = [getParamNameDefList guessReturnType getParams]
     mixin = 'com.galua.teal.psi.impl.TealClosureExprMixin'
@@ -574,7 +559,6 @@ tableExpr ::= '{' fieldList '}' {
     ]
     implements = [
         "com.galua.teal.psi.TealIndentRange"
-        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealTableExprStub>"
     ]
     mixin = "com.galua.teal.psi.impl.TealTableExprMixin"
 }
@@ -645,7 +629,6 @@ nameExpr ::= ID {
     implements = [
         "com.galua.teal.psi.TealPsiElement"
         "com.intellij.psi.PsiNameIdentifierOwner"
-        "com.galua.teal.stubs.TealExprStubElement<com.galua.teal.stubs.TealNameExprStub>"
         "com.galua.teal.psi.TealModuleClassField"
     ]
     methods = [
