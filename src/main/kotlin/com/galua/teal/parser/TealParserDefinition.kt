@@ -5,7 +5,7 @@
 package com.galua.teal.parser
 
 import com.galua.teal.lexer.TealLexer
-import com.galua.teal.lexer.TealTokenTypes
+import com.galua.teal.lexer.TealTokenSets
 import com.galua.teal.psi.TealFile
 import com.galua.teal.psi.TealTypes
 import com.intellij.lang.ASTNode
@@ -28,9 +28,9 @@ class TealParserDefinition : ParserDefinition {
 
     override fun getWhitespaceTokens(): TokenSet = TokenSet.create(TokenType.WHITE_SPACE)
 
-    override fun getCommentTokens(): TokenSet = TokenSet.create(TealTokenTypes.COMMENT)
+    override fun getCommentTokens(): TokenSet = TealTokenSets.COMMENTS
 
-    override fun getStringLiteralElements(): TokenSet = TokenSet.create(TealTokenTypes.STRING)
+    override fun getStringLiteralElements(): TokenSet = TealTokenSets.STRING_LITERALS
 
     override fun createElement(node: ASTNode): PsiElement = TealTypes.Factory.createElement(node)
 

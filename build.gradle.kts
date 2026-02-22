@@ -40,6 +40,23 @@ ktlint {
     ignoreFailures.set(false)
 }
 
+tasks {
+    withType<org.jetbrains.grammarkit.tasks.GenerateParserTask> {
+        sourceFile.set(file("src/main/grammars/teal.bnf"))
+        targetRootOutputDir.set(file("src/main/gen"))
+
+        pathToParser.set("src/main/gen/com/galua/teal/parser/TealParser.java")
+        pathToPsiRoot.set("src/main/gen/com/galua/teal/psi")
+        purgeOldFiles.set(true)
+    }
+
+    withType<org.jetbrains.grammarkit.tasks.GenerateLexerTask> {
+        sourceFile.set(file("src/main/grammars/_TealLexer.flex"))
+        targetOutputDir.set(file("src/main/gen/com/galua/teal/lexer"))
+        purgeOldFiles.set(true)
+    }
+}
+
 tasks.named("compileKotlin") {
     dependsOn("generateParser")
 }

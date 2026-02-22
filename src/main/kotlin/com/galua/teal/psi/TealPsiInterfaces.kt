@@ -26,7 +26,7 @@ interface TealClassField : TealNamedElement
 
 interface TealModuleClassField : TealPsiElement
 
-interface TealNamedElement : PsiNamedElement
+interface TealNamedElement : TealPsiElement, PsiNamedElement
 
 interface TealTypeGuessable : TealPsiElement
 

@@ -225,6 +225,7 @@ labelStat ::= '::' ID '::' {
     implements = [
         "com.intellij.psi.PsiNameIdentifierOwner"
     ]
+    mixin = "com.galua.teal.psi.impl.TealNamedElementMixin"
     methods = [
         getNameIdentifier
         getTextOffset
@@ -315,6 +316,7 @@ localFuncDef ::= 'local' 'function' ID funcBody {
         "com.galua.teal.psi.TealStatement"
         "com.intellij.psi.PsiNameIdentifierOwner"
     ]
+    mixin = "com.galua.teal.psi.impl.TealNamedStubMixin<com.galua.teal.stubs.TealLocalFuncDefStub>"
     methods = [
         getComment
         getParamNameDefList
@@ -589,6 +591,7 @@ tableField ::= tableField1 | tableField2 | expr {
         lbrack = 'LBRACK'
     ]
     stubClass = "com.galua.teal.stubs.TealTableFieldStub"
+    mixin = "com.galua.teal.psi.impl.TealNamedStubMixin<com.galua.teal.stubs.TealTableFieldStub>"
     implements = [
         "com.galua.teal.psi.TealClassField"
         "com.intellij.psi.PsiNameIdentifierOwner"
@@ -617,6 +620,7 @@ nameDef ::= ID {
         "com.galua.teal.psi.TealTypeGuessable"
         "com.intellij.psi.PsiNameIdentifierOwner"
     ]
+    mixin = "com.galua.teal.psi.impl.TealNamedStubMixin<com.galua.teal.stubs.TealNameDefStub>"
     methods = [
         getName
         setName

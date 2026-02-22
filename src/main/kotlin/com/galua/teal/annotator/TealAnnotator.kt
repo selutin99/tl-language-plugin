@@ -10,6 +10,7 @@ import com.galua.teal.psi.TealLiteralExpr
 import com.galua.teal.psi.TealLocalDef
 import com.galua.teal.psi.TealTypeAnn
 import com.galua.teal.psi.TealTypeName
+import com.galua.teal.psi.TealTypeNameDef
 import com.galua.teal.psi.TealTypes
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.lang.annotation.AnnotationHolder
@@ -25,6 +26,7 @@ class TealAnnotator : Annotator {
         when (element) {
             is TealLocalDef -> validateLocalDeclaration(element, holder)
             is TealTypeName -> highlightTypeIdentifier(element, holder)
+            is TealTypeNameDef -> highlightTypeIdentifier(element, holder)
         }
     }
 
@@ -72,10 +74,9 @@ class TealAnnotator : Annotator {
     }
 
     private fun highlightTypeIdentifier(
-        element: TealTypeName,
+        element: PsiElement,
         holder: AnnotationHolder,
     ) {
-        if (element.id == null) return
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
             .range(element)
             .textAttributes(TealSyntaxHighlighter.TYPE_IDENTIFIER_KEY)

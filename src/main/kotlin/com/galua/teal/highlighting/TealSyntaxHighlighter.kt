@@ -5,30 +5,30 @@
 package com.galua.teal.highlighting
 
 import com.galua.teal.lexer.TealLexer
-import com.galua.teal.lexer.TealTokenTypes
+import com.galua.teal.lexer.TealTokenSets
 import com.intellij.lexer.Lexer
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.HighlighterColors
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
-import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IElementType
 
 class TealSyntaxHighlighter : SyntaxHighlighterBase() {
     override fun getHighlightingLexer(): Lexer = TealLexer()
 
     override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> =
-        when (tokenType) {
-            TealTokenTypes.KEYWORD -> KEYWORD_KEYS
-            TealTokenTypes.TYPE -> TYPE_KEYS
-            TealTokenTypes.STRING -> STRING_KEYS
-            TealTokenTypes.NUMBER -> NUMBER_KEYS
-            TealTokenTypes.COMMENT -> COMMENT_KEYS
-            TealTokenTypes.IDENTIFIER -> IDENTIFIER_KEYS
-            TealTokenTypes.OPERATOR -> OPERATOR_KEYS
-            TealTokenTypes.BRACKET -> BRACKET_KEYS
-            TealTokenTypes.PUNCTUATION -> PUNCTUATION_KEYS
-            TokenType.BAD_CHARACTER -> BAD_CHAR_KEYS
+        when {
+            TealTokenSets.DOC_COMMENTS.contains(tokenType) -> DOC_COMMENT_KEYS
+            TealTokenSets.COMMENTS.contains(tokenType) -> COMMENT_KEYS
+            TealTokenSets.SHEBANGS.contains(tokenType) -> COMMENT_KEYS
+            TealTokenSets.STRING_LITERALS.contains(tokenType) -> STRING_KEYS
+            TealTokenSets.NUMBERS.contains(tokenType) -> NUMBER_KEYS
+            TealTokenSets.KEYWORDS.contains(tokenType) -> KEYWORD_KEYS
+            TealTokenSets.OPERATORS.contains(tokenType) -> OPERATOR_KEYS
+            TealTokenSets.BRACKETS.contains(tokenType) -> BRACKET_KEYS
+            TealTokenSets.PUNCTUATION.contains(tokenType) -> PUNCTUATION_KEYS
+            TealTokenSets.IDENTIFIERS.contains(tokenType) -> IDENTIFIER_KEYS
+            TealTokenSets.BAD_CHARACTERS.contains(tokenType) -> BAD_CHAR_KEYS
             else -> EMPTY
         }
 
@@ -61,13 +61,6 @@ class TealSyntaxHighlighter : SyntaxHighlighterBase() {
                     DefaultLanguageHighlighterColors.STRING,
                 ),
             )
-        private val TYPE_KEYS =
-            arrayOf<TextAttributesKey>(
-                TextAttributesKey.createTextAttributesKey(
-                    "TEAL_TYPE",
-                    DefaultLanguageHighlighterColors.KEYWORD,
-                ),
-            )
         private val NUMBER_KEYS =
             arrayOf(
                 TextAttributesKey.createTextAttributesKey(
@@ -80,6 +73,13 @@ class TealSyntaxHighlighter : SyntaxHighlighterBase() {
                 TextAttributesKey.createTextAttributesKey(
                     "TEAL_COMMENT",
                     DefaultLanguageHighlighterColors.LINE_COMMENT,
+                ),
+            )
+        private val DOC_COMMENT_KEYS =
+            arrayOf(
+                TextAttributesKey.createTextAttributesKey(
+                    "TEAL_DOC_COMMENT",
+                    DefaultLanguageHighlighterColors.DOC_COMMENT,
                 ),
             )
         private val IDENTIFIER_KEYS =
