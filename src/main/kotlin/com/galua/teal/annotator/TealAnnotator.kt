@@ -11,22 +11,30 @@ import com.galua.teal.psi.TealLocalDef
 import com.galua.teal.psi.TealTypeAnn
 import com.galua.teal.psi.TealTypeName
 import com.galua.teal.psi.TealTypeNameDef
+import com.galua.teal.psi.TealTypedVarStat
 import com.galua.teal.psi.TealTypes
-import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.PsiTreeUtil
 
 class TealAnnotator : Annotator {
     override fun annotate(
         element: PsiElement,
         holder: AnnotationHolder,
     ) {
+        if (element.node.elementType == TealTypes.ID && isTypeNameToken(element)) {
+            annotateTypeNameToken(element, holder)
+            return
+        }
+
         when (element) {
             is TealLocalDef -> validateLocalDeclaration(element, holder)
-            is TealTypeName -> highlightTypeIdentifier(element, holder)
-            is TealTypeNameDef -> highlightTypeIdentifier(element, holder)
+            is TealTypedVarStat -> validateTypedVarStat(element, holder)
         }
     }
 
@@ -63,6 +71,32 @@ class TealAnnotator : Annotator {
         return stripped.ifEmpty { null }
     }
 
+    private fun validateTypedVarStat(
+        element: TealTypedVarStat,
+        holder: AnnotationHolder,
+    ) {
+        val exprList = element.exprList ?: return
+        val exprs = exprList.exprList
+        if (exprs.isEmpty()) return
+
+        val typedVars = element.typedVarList.typedVarList
+        for (index in 0 until minOf(typedVars.size, exprs.size)) {
+            val declaredType = extractDeclaredType(typedVars[index].typeAnn) ?: continue
+            if (!BUILT_IN_TYPES.contains(declaredType)) {
+                continue
+            }
+
+            val initializer = exprs[index]
+            val initializerType = inferLiteralType(initializer) ?: continue
+            if (!isAssignable(declaredType, initializerType)) {
+                holder.newAnnotation(
+                    HighlightSeverity.ERROR,
+                    "Cannot assign $initializerType to $declaredType",
+                ).range(initializer).create()
+            }
+        }
+    }
+
     private fun isAssignable(
         declaredType: String,
         initializerType: String,
@@ -82,6 +116,53 @@ class TealAnnotator : Annotator {
             .textAttributes(TealSyntaxHighlighter.TYPE_IDENTIFIER_KEY)
             .create()
     }
+
+    private fun annotateTypeNameToken(
+        element: PsiElement,
+        holder: AnnotationHolder,
+    ) {
+        highlightTypeIdentifier(element, holder)
+        if (element.parent is TealTypeNameDef) {
+            return
+        }
+
+        val typeName = element.text
+        if (isKnownTypeName(typeName, element)) {
+            return
+        }
+
+        holder.newAnnotation(
+            HighlightSeverity.ERROR,
+            "Unknown type: $typeName",
+        ).range(element).create()
+    }
+
+    private fun isTypeNameToken(element: PsiElement): Boolean {
+        val parent = element.parent
+        return parent is TealTypeNameDef ||
+            parent is TealTypeName
+    }
+
+    private fun isKnownTypeName(
+        typeName: String,
+        context: PsiElement,
+    ): Boolean {
+        if (BUILT_IN_TYPES.contains(typeName)) {
+            return true
+        }
+
+        val file = context.containingFile ?: return false
+        return getDeclaredTypeNames(file).contains(typeName)
+    }
+
+    private fun getDeclaredTypeNames(file: PsiFile): Set<String> =
+        CachedValuesManager.getCachedValue(file) {
+            val names =
+                PsiTreeUtil.findChildrenOfType(file, TealTypeNameDef::class.java)
+                    .mapNotNull { it.text?.takeIf(String::isNotBlank) }
+                    .toSet()
+            CachedValueProvider.Result.create(names, file)
+        }
 
     private fun inferLiteralType(expr: TealExpr): String? {
         val literal = PsiTreeUtil.findChildOfType(expr, TealLiteralExpr::class.java) ?: return null
@@ -103,11 +184,10 @@ class TealAnnotator : Annotator {
                 "integer",
                 "nil",
                 "number",
+                "self",
                 "string",
-                "table",
                 "thread",
                 "userdata",
-                "function",
             )
     }
 }

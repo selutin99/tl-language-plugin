@@ -32,7 +32,10 @@ object TealParserUtil : GeneratedParserUtilBase() {
         WhitespacesAndCommentsBinder { _, _, _ -> 0 }
 
     @JvmStatic
-    fun parseStatement(builder: PsiBuilder, level: Int): Boolean {
+    fun parseStatement(
+        builder: PsiBuilder,
+        level: Int,
+    ): Boolean {
         if (!recursion_guard_(builder, level, "parseStatement")) {
             return false
         }
@@ -62,14 +65,22 @@ object TealParserUtil : GeneratedParserUtilBase() {
     }
 
     @JvmStatic
-    fun lazyBlock(builder: PsiBuilder, level: Int): Boolean =
-        TealParser.block(builder, level + 1)
+    fun lazyBlock(
+        builder: PsiBuilder,
+        level: Int,
+    ): Boolean = TealParser.block(builder, level + 1)
 
     @JvmStatic
-    fun parseExpr(builder: PsiBuilder, level: Int): Boolean =
-        parseBinaryExpr(builder, level, 0)
+    fun parseExpr(
+        builder: PsiBuilder,
+        level: Int,
+    ): Boolean = parseBinaryExpr(builder, level, 0)
 
-    private fun parseBinaryExpr(builder: PsiBuilder, level: Int, minPrec: Int): Boolean {
+    private fun parseBinaryExpr(
+        builder: PsiBuilder,
+        level: Int,
+        minPrec: Int,
+    ): Boolean {
         if (!recursion_guard_(builder, level, "parseBinaryExpr")) {
             return false
         }
@@ -103,14 +114,20 @@ object TealParserUtil : GeneratedParserUtilBase() {
         return true
     }
 
-    private fun parseOperand(builder: PsiBuilder, level: Int): Boolean {
+    private fun parseOperand(
+        builder: PsiBuilder,
+        level: Int,
+    ): Boolean {
         if (TealParser.unaryExpr(builder, level + 1)) {
             return true
         }
         return parsePrimary(builder, level + 1)
     }
 
-    private fun parsePrimary(builder: PsiBuilder, level: Int): Boolean {
+    private fun parsePrimary(
+        builder: PsiBuilder,
+        level: Int,
+    ): Boolean {
         if (!recursion_guard_(builder, level, "parsePrimary")) {
             return false
         }

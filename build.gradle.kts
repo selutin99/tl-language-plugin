@@ -18,9 +18,7 @@ kotlin {
 
 sourceSets {
     main {
-        java.srcDirs(
-            "src/main/gen"
-        )
+        java.srcDirs("src/main/gen")
     }
 }
 
@@ -55,8 +53,12 @@ tasks {
         targetOutputDir.set(file("src/main/gen/com/galua/teal/lexer"))
         purgeOldFiles.set(true)
     }
+
+    withType<org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask> {
+        setSource(files("src/main/kotlin"))
+    }
 }
 
 tasks.named("compileKotlin") {
-    dependsOn("generateParser")
+    dependsOn("generateParser", "generateLexer")
 }

@@ -2,6 +2,8 @@
  * SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
  * SPDX-License-Identifier: MIT
  */
+@file:Suppress("UNUSED_PARAMETER")
+
 package com.galua.teal.psi
 
 import com.intellij.navigation.ItemPresentation
@@ -12,31 +14,27 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.SearchScope
 import com.intellij.psi.util.PsiTreeUtil
 
-fun getComment(element: PsiElement): PsiComment? =
-    PsiTreeUtil.findChildOfType(element, PsiComment::class.java)
+fun getComment(element: PsiElement): PsiComment? = PsiTreeUtil.findChildOfType(element, PsiComment::class.java)
 
-fun assign(element: PsiElement): PsiElement? =
-    element.node.findChildByType(TealTypes.ASSIGN)?.psi
+fun assign(element: PsiElement): PsiElement? = element.node.findChildByType(TealTypes.ASSIGN)?.psi
 
-fun varExprList(element: PsiElement): TealExprList? =
-    PsiTreeUtil.getChildrenOfTypeAsList(element, TealExprList::class.java).firstOrNull()
+fun varExprList(element: PsiElement): TealExprList? = PsiTreeUtil.getChildrenOfTypeAsList(element, TealExprList::class.java).firstOrNull()
 
-fun valueExprList(element: PsiElement): TealExprList? =
-    PsiTreeUtil.getChildrenOfTypeAsList(element, TealExprList::class.java).getOrNull(1)
+fun valueExprList(element: PsiElement): TealExprList? = PsiTreeUtil.getChildrenOfTypeAsList(element, TealExprList::class.java).getOrNull(1)
 
-fun until(element: PsiElement): PsiElement? =
-    element.node.findChildByType(TealTypes.UNTIL)?.psi
+fun until(element: PsiElement): PsiElement? = element.node.findChildByType(TealTypes.UNTIL)?.psi
 
 fun getParamNameDefList(element: PsiElement): List<TealParamNameDef> =
     PsiTreeUtil.getChildrenOfTypeAsList(element, TealParamNameDef::class.java)
 
-fun getNameIdentifier(element: PsiElement): PsiElement? =
-    element.node.findChildByType(TealTypes.ID)?.psi
+fun getNameIdentifier(element: PsiElement): PsiElement? = element.node.findChildByType(TealTypes.ID)?.psi
 
-fun getTextOffset(element: PsiElement): Int =
-    getNameIdentifier(element)?.textOffset ?: element.textOffset
+fun getTextOffset(element: PsiElement): Int = getNameIdentifier(element)?.textOffset ?: element.textOffset
 
-fun setName(element: PsiElement, name: String): PsiElement = element
+fun setName(
+    element: PsiElement,
+    name: String,
+): PsiElement = element
 
 fun getName(element: PsiElement): String? = getNameIdentifier(element)?.text
 
@@ -56,27 +54,21 @@ fun getWorth(element: PsiElement): Int = 0
 
 fun isDeprecated(element: PsiElement): Boolean = false
 
-fun getParams(element: PsiElement): List<TealParamDef> =
-    PsiTreeUtil.getChildrenOfTypeAsList(element, TealParamDef::class.java)
+fun getParams(element: PsiElement): List<TealParamDef> = PsiTreeUtil.getChildrenOfTypeAsList(element, TealParamDef::class.java)
 
 fun isStatic(element: PsiElement): Boolean = false
 
-fun dot(element: PsiElement): PsiElement? =
-    element.node.findChildByType(TealTypes.DOT)?.psi
+fun dot(element: PsiElement): PsiElement? = element.node.findChildByType(TealTypes.DOT)?.psi
 
-fun colon(element: PsiElement): PsiElement? =
-    element.node.findChildByType(TealTypes.COLON)?.psi
+fun colon(element: PsiElement): PsiElement? = element.node.findChildByType(TealTypes.COLON)?.psi
 
-fun getUseScope(element: PsiElement): SearchScope =
-    element.containingFile?.useScope ?: GlobalSearchScope.EMPTY_SCOPE
+fun getUseScope(element: PsiElement): SearchScope = element.containingFile?.useScope ?: GlobalSearchScope.EMPTY_SCOPE
 
 fun guessTypeAt(element: PsiElement): PsiElement? = null
 
-fun getIdExpr(element: PsiElement): PsiElement? =
-    element.node.findChildByType(TealTypes.ID)?.psi
+fun getIdExpr(element: PsiElement): PsiElement? = element.node.findChildByType(TealTypes.ID)?.psi
 
-fun lbrack(element: PsiElement): PsiElement? =
-    element.node.findChildByType(TealTypes.LBRACK)?.psi
+fun lbrack(element: PsiElement): PsiElement? = element.node.findChildByType(TealTypes.LBRACK)?.psi
 
 fun getFirstStringArg(element: PsiElement): PsiElement? {
     val literal = PsiTreeUtil.findChildOfType(element, TealLiteralExpr::class.java) ?: return null
@@ -89,17 +81,14 @@ fun isMethodColonCall(element: PsiElement): Boolean = false
 
 fun isFunctionCall(element: PsiElement): Boolean = true
 
-fun findField(element: PsiElement): TealTableField? =
-    PsiTreeUtil.findChildOfType(element, TealTableField::class.java)
+fun findField(element: PsiElement): TealTableField? = PsiTreeUtil.findChildOfType(element, TealTableField::class.java)
 
-fun getFieldName(element: PsiElement): String? =
-    PsiTreeUtil.findChildOfType(element, TealNameDef::class.java)?.name ?: getName(element)
+fun getFieldName(element: PsiElement): String? = PsiTreeUtil.findChildOfType(element, TealNameDef::class.java)?.name ?: getName(element)
 
-fun nameDef(element: PsiElement): TealNameDef? =
-    PsiTreeUtil.findChildOfType(element, TealNameDef::class.java)
+fun nameDef(element: PsiElement): TealNameDef? = PsiTreeUtil.findChildOfType(element, TealNameDef::class.java)
 
-fun RPAREN(element: PsiElement): PsiElement? =
-    element.node.findChildByType(TealTypes.RPAREN)?.psi
+@Suppress("ktlint:standard:function-naming")
+fun RPAREN(element: PsiElement): PsiElement? = element.node.findChildByType(TealTypes.RPAREN)?.psi
 
-fun ELLIPSIS(element: PsiElement): PsiElement? =
-    element.node.findChildByType(TealTypes.ELLIPSIS)?.psi
+@Suppress("ktlint:standard:function-naming")
+fun ELLIPSIS(element: PsiElement): PsiElement? = element.node.findChildByType(TealTypes.ELLIPSIS)?.psi

@@ -1,4 +1,4 @@
-package com.galua.teal.parser;
+package com.galua.teal.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
@@ -22,14 +22,39 @@ import static com.galua.teal.psi.TealTypes.*;
 %type IElementType
 %unicode
 
+%state SHEBANG_STATE
+%state BLOCK_COMMENT_STATE
+
 EOL=\R
 WHITE_SPACE=\s+
+
+DIGIT=[0-9]
+DECIMAL_INT={DIGIT}+
+DECIMAL_FLOAT=({DIGIT}+\.{DIGIT}+|\.{DIGIT}+)
+EXP=[eE][+-]?{DIGIT}+
+NUMBER_LITERAL=({DECIMAL_FLOAT}|{DECIMAL_INT}){EXP}?
+
+ESC=\\.
+DQ_STRING=\"([^\"\\r\\n]|{ESC})*\"
+SQ_STRING='([^'\\r\\n]|{ESC})*'
+STRING_LITERAL=({DQ_STRING}|{SQ_STRING})
+
+LINE_COMMENT=--[^\r\n]*
+DOC_COMMENT=---[^\r\n]*
 
 ID=[A-Za-z_][A-Za-z0-9_]*
 
 %%
 <YYINITIAL> {
   {WHITE_SPACE}           { return WHITE_SPACE; }
+
+  "#!"                    { yybegin(SHEBANG_STATE); return SHEBANG; }
+  "--[["                  { yybegin(BLOCK_COMMENT_STATE); return BLOCK_COMMENT; }
+  {DOC_COMMENT}           { return DOC_COMMENT; }
+  {LINE_COMMENT}          { return SHORT_COMMENT; }
+
+  {STRING_LITERAL}        { return STRING; }
+  {NUMBER_LITERAL}        { return NUMBER; }
 
   "and"                   { return AND; }
   "break"                 { return BREAK; }
@@ -61,8 +86,6 @@ ID=[A-Za-z_][A-Za-z0-9_]*
   "is"                    { return IS; }
   "REGION"                { return REGION; }
   "ENDREGION"             { return ENDREGION; }
-  "#!"                    { return SHEBANG; }
-  "SHEBANG_CONTENT"       { return SHEBANG_CONTENT; }
   "..."                   { return ELLIPSIS; }
   ".."                    { return CONCAT; }
   "=="                    { return EQ; }
@@ -90,11 +113,6 @@ ID=[A-Za-z_][A-Za-z0-9_]*
   ":"                     { return COLON; }
   "."                     { return DOT; }
   "^"                     { return EXP; }
-  "SHORT_COMMENT"         { return SHORT_COMMENT; }
-  "DOC_COMMENT"           { return DOC_COMMENT; }
-  "BLOCK_COMMENT"         { return BLOCK_COMMENT; }
-  "NUMBER"                { return NUMBER; }
-  "STRING"                { return STRING; }
   "::"                    { return DOUBLE_COLON; }
   "goto"                  { return GOTO; }
   "|"                     { return BIT_OR; }
@@ -106,6 +124,17 @@ ID=[A-Za-z_][A-Za-z0-9_]*
 
   {ID}                    { return ID; }
 
+}
+
+<SHEBANG_STATE> {
+  [^\r\n]+                { yybegin(YYINITIAL); return SHEBANG_CONTENT; }
+  {EOL}                   { yybegin(YYINITIAL); return WHITE_SPACE; }
+}
+
+<BLOCK_COMMENT_STATE> {
+  "]]"                    { yybegin(YYINITIAL); return BLOCK_COMMENT; }
+  [^]]+                   { return BLOCK_COMMENT; }
+  "]"                     { return BLOCK_COMMENT; }
 }
 
 [^] { return BAD_CHARACTER; }

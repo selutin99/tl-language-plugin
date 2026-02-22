@@ -95,7 +95,7 @@
         NUMBER="NUMBER"
         STRING = "STRING"
 
-        //lua 5.3
+        // lua 5.3
         DOUBLE_COLON = "::"
         GOTO = "goto"
         BIT_OR = "|"
@@ -156,7 +156,6 @@ emptyStat ::= ';'
 
 varList ::= varExpr (',' varExpr)* {
     extends = exprList
-    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
 }
 assignStat ::= varList '=' exprList {
     pin = 2
@@ -165,7 +164,6 @@ assignStat ::= varList '=' exprList {
     ]
     methods = [assign = 'ASSIGN' varExprList = '/exprList[0]' valueExprList = '/exprList[1]']
     mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
-    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
 }
 doStat ::= 'do' <<lazyBlock>> 'end' {
     pin = 1
@@ -173,7 +171,6 @@ doStat ::= 'do' <<lazyBlock>> 'end' {
         "com.galua.teal.psi.TealIndentRange"
     ]
     mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
-    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
 }
 whileStat ::= 'while' expr 'do' <<lazyBlock>> 'end' {
     pin = 1
@@ -199,7 +196,6 @@ ifStat ::= 'if' expr 'then' <<lazyBlock>> ('elseif' expr 'then' <<lazyBlock>>)* 
         "com.galua.teal.psi.TealIndentRange"
     ]
     mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
-    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
 }
 forAStat ::= 'for' paramNameDef '=' expr ',' expr (',' expr)? 'do' <<lazyBlock>> 'end' {
     pin = 3
@@ -242,7 +238,6 @@ gotoStat ::= 'goto' ID {
 private defStat ::= classMethodDef | funcDef | localFuncDef | localDef | typeAliasStat | recordStat | interfaceStat | enumStat
 exprStat ::= expr {
     mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
-    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
 }
 
 funcDef ::= 'function' ID funcBody {
@@ -269,7 +264,6 @@ funcDef ::= 'function' ID funcBody {
         getParams
         getReferences
     ]
-    stubClass = "com.galua.teal.stubs.TealFuncStub"
 }
 
 left funcPrefixRef ::= '.' ID { extends = indexExpr elementType = indexExpr }
@@ -279,7 +273,6 @@ classMethodName ::=  nameExpr (funcPrefixRef)* (('.' ID) | (':' ID)) {
         dot = 'DOT'
         colon = 'COLON'
     ]
-    stubClass = 'com.galua.teal.stubs.TealPlaceholderStub'
 }
 classMethodDef ::= 'function' classMethodName funcBody {
     pin = 2
@@ -288,7 +281,6 @@ classMethodDef ::= 'function' classMethodName funcBody {
         "com.galua.teal.psi.TealDeclaration"
         "com.galua.teal.psi.TealStatement"
     ]
-    stubClass = "com.galua.teal.stubs.TealClassMethodStub"
     methods = [
         getComment
         guessParentType
@@ -328,21 +320,17 @@ localFuncDef ::= 'local' 'function' ID funcBody {
         guessReturnType
         getParams
     ]
-    stubClass = 'com.galua.teal.stubs.TealLocalFuncDefStub'
 }
 attribute ::= '<' ID '>' {
     pin = 1
 }
 nameList ::= nameDef attribute? (',' nameDef attribute?)* {
-    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
 }
 typedNameDef ::= nameDef typeAnn
 typedNameList ::= typedNameDef attribute? (',' typedNameDef attribute?)* {
-    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
 }
 localDef ::= 'local' (typedNameList | nameList) ('=' exprList)? {
     pin = 1
-    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
     implements = [
         "com.galua.teal.psi.TealDeclaration"
         "com.galua.teal.psi.TealStatement"
@@ -388,14 +376,12 @@ enumFieldSep ::= ',' | ';'
 
 returnStat ::= return exprList? {
     mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
-    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
 }
 breakStat ::= break
 private lastStat ::= returnStat | breakStat
 
 exprList ::= expr (',' expr)* {
     methods = [guessTypeAt]
-    stubClass = "com.galua.teal.stubs.TealPlaceholderStub"
 }
 
 typeAnn ::= ':' typeexp {
@@ -506,7 +492,6 @@ left indexExpr ::= '[' expr ']' | '.' ID | ':' ID {
 }
 
 args ::= listArgs | singleArg {
-    stubClass = 'com.galua.teal.stubs.TealPlaceholderStub'
 }
 singleArg ::= tableExpr | stringExpr { extends = args }
 private arg_expr_list ::= (expr ',')* (expr |& ')') { pin = 1 }
@@ -548,7 +533,6 @@ funcBody ::= '(' (parList)? ')' funcReturnType? <<lazyBlock>>? 'end' {
         RPAREN = 'RPAREN'
         ELLIPSIS = 'ELLIPSIS'
     ]
-    stubClass = 'com.galua.teal.stubs.TealPlaceholderStub'
 }
 
 private parList ::= paramDef (',' paramDef)* (',' '...')? | '...' { recoverWhile = parList_recover }
@@ -590,7 +574,6 @@ tableField ::= tableField1 | tableField2 | expr {
         nameDef = "tableFieldNameDef"
         lbrack = 'LBRACK'
     ]
-    stubClass = "com.galua.teal.stubs.TealTableFieldStub"
     mixin = "com.galua.teal.psi.impl.TealNamedStubMixin<com.galua.teal.stubs.TealTableFieldStub>"
     implements = [
         "com.galua.teal.psi.TealClassField"
@@ -627,7 +610,6 @@ nameDef ::= ID {
         getNameIdentifier
         getUseScope
     ]
-    stubClass = "com.galua.teal.stubs.TealNameDefStub"
 }
 nameExpr ::= ID {
     implements = [
@@ -649,7 +631,6 @@ nameExpr ::= ID {
 }
 paramNameDef ::= ID {
     extends = nameDef
-    stubClass = "com.galua.teal.stubs.TealNameDefStub"
 }
 paramDef ::= typedParamDef | paramNameDef
 typedParamDef ::= paramNameDef typeAnn
