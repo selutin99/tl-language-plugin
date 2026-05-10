@@ -5,6 +5,7 @@
 package com.galua.teal.annotator
 
 import com.galua.teal.highlighting.TealSyntaxHighlighter
+import com.galua.teal.psi.TealBinaryExpr
 import com.galua.teal.psi.TealExpr
 import com.galua.teal.psi.TealLiteralExpr
 import com.galua.teal.psi.TealLocalDef
@@ -34,6 +35,7 @@ class TealAnnotator : Annotator {
         }
 
         when (element) {
+            is TealBinaryExpr -> validateBinaryExpression(element, holder)
             is TealLocalDef -> validateLocalDeclaration(element, holder)
             is TealTypedVarStat -> validateTypedVarStat(element, holder)
         }
@@ -103,7 +105,7 @@ class TealAnnotator : Annotator {
         initializer: TealExpr,
         holder: AnnotationHolder,
     ) {
-        val initializerType = inferLiteralType(initializer) ?: return
+        val initializerType = inferLiteralType(initializer)?.name ?: return
         if (isAssignable(declaredType, initializerType)) {
             return
         }
@@ -112,6 +114,26 @@ class TealAnnotator : Annotator {
             HighlightSeverity.ERROR,
             "Cannot assign $initializerType to $declaredType",
         ).range(initializer).create()
+    }
+
+    private fun validateBinaryExpression(
+        element: TealBinaryExpr,
+        holder: AnnotationHolder,
+    ) {
+        val operator = element.node.findChildByType(TealTypes.PLUS)?.psi ?: return
+        val operands = element.children.filterIsInstance<TealExpr>()
+        if (operands.size < 2) return
+
+        val leftType = inferLiteralType(operands.first()) ?: return
+        val rightType = inferLiteralType(operands.last()) ?: return
+        if (leftType.name == "number" && rightType.name == "number") {
+            return
+        }
+
+        holder.newAnnotation(
+            HighlightSeverity.ERROR,
+            "cannot use operator '${operator.text}' for types ${leftType.displayText} and ${rightType.displayText}",
+        ).range(operator).create()
     }
 
     private fun isAssignable(
@@ -181,19 +203,28 @@ class TealAnnotator : Annotator {
             CachedValueProvider.Result.create(names, file)
         }
 
-    private fun inferLiteralType(expr: TealExpr): String? {
+    private fun inferLiteralType(expr: TealExpr): LiteralType? {
         val literal =
             expr as? TealLiteralExpr
                 ?: PsiTreeUtil.findChildOfType(expr, TealLiteralExpr::class.java)
                 ?: return null
         val node = literal.node
         return when {
-            node.findChildByType(TealTypes.NUMBER) != null -> "number"
-            node.findChildByType(TealTypes.STRING) != null -> "string"
+            node.findChildByType(TealTypes.NUMBER) != null ->
+                LiteralType("number", node.findChildByType(TealTypes.NUMBER)?.text)
+            node.findChildByType(TealTypes.STRING) != null ->
+                LiteralType("string", node.findChildByType(TealTypes.STRING)?.text)
             node.findChildByType(TealTypes.TRUE) != null ||
-                node.findChildByType(TealTypes.FALSE) != null -> "boolean"
+                node.findChildByType(TealTypes.FALSE) != null -> LiteralType("boolean", null)
             else -> null
         }
+    }
+
+    private data class LiteralType(
+        val name: String,
+        private val literalText: String?,
+    ) {
+        val displayText: String = listOfNotNull(name, literalText).joinToString(" ")
     }
 
     companion object {

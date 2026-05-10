@@ -35,8 +35,8 @@ EXP=[eE][+-]?{DIGIT}+
 NUMBER_LITERAL=({DECIMAL_FLOAT}|{DECIMAL_INT}){EXP}?
 
 ESC=\\.
-DQ_STRING=\"([^\"\\r\\n]|{ESC})*\"
-SQ_STRING='([^'\\r\\n]|{ESC})*'
+DQ_STRING=\"([^\"\\\r\n]|{ESC})*\"
+SQ_STRING='([^'\\\r\n]|{ESC})*'
 STRING_LITERAL=({DQ_STRING}|{SQ_STRING})
 
 LINE_COMMENT=--[^\r\n]*

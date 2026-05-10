@@ -496,7 +496,7 @@ stringExpr ::= STRING {
     elementType = literalExpr
 }
 
-private varExpr ::= primaryExpr
+private varExpr ::= nameExpr indexExpr*
 
 expr ::= <<parseExpr>> {
     mixin = "com.galua.teal.psi.impl.TealExprMixin"
@@ -547,7 +547,8 @@ left indexExpr ::= '[' expr ']' | '.' ID | ':' ID {
 args ::= listArgs | singleArg {
 }
 singleArg ::= tableExpr | stringExpr { extends = args }
-private arg_expr_list ::= (expr ',')* (expr |& ')') { pin = 1 }
+private arg_expr ::= <<parseExpr>>
+private arg_expr_list ::= arg_expr (',' arg_expr)* ','? { pin = 1 }
 listArgs ::= '(' (arg_expr_list)? ')' { extends = args pin = 1 }
 
 left callExpr ::= args {
