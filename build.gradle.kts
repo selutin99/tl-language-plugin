@@ -22,6 +22,10 @@ sourceSets {
     }
 }
 
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junitVersion")}")
+}
+
 intellij {
     version.set("2023.3")
     type.set("IC")

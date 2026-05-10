@@ -49,19 +49,7 @@ class TealAnnotator : Annotator {
 
         val typedNames = typedNameList.typedNameDefList
         for (index in 0 until minOf(typedNames.size, exprs.size)) {
-            val declaredType = extractDeclaredType(typedNames[index].typeAnn) ?: continue
-            if (!BUILT_IN_TYPES.contains(declaredType)) {
-                continue
-            }
-
-            val initializer = exprs[index]
-            val initializerType = inferLiteralType(initializer) ?: continue
-            if (!isAssignable(declaredType, initializerType)) {
-                holder.newAnnotation(
-                    HighlightSeverity.ERROR,
-                    "Cannot assign $initializerType to $declaredType",
-                ).range(initializer).create()
-            }
+            validateAssignment(typedNames[index].typeAnn, exprs[index], holder)
         }
     }
 
@@ -86,15 +74,37 @@ class TealAnnotator : Annotator {
                 continue
             }
 
-            val initializer = exprs[index]
-            val initializerType = inferLiteralType(initializer) ?: continue
-            if (!isAssignable(declaredType, initializerType)) {
-                holder.newAnnotation(
-                    HighlightSeverity.ERROR,
-                    "Cannot assign $initializerType to $declaredType",
-                ).range(initializer).create()
-            }
+            validateAssignment(declaredType, exprs[index], holder)
         }
+    }
+
+    private fun validateAssignment(
+        typeAnn: TealTypeAnn,
+        initializer: TealExpr,
+        holder: AnnotationHolder,
+    ) {
+        val declaredType = extractDeclaredType(typeAnn) ?: return
+        if (!BUILT_IN_TYPES.contains(declaredType)) {
+            return
+        }
+
+        validateAssignment(declaredType, initializer, holder)
+    }
+
+    private fun validateAssignment(
+        declaredType: String,
+        initializer: TealExpr,
+        holder: AnnotationHolder,
+    ) {
+        val initializerType = inferLiteralType(initializer) ?: return
+        if (isAssignable(declaredType, initializerType)) {
+            return
+        }
+
+        holder.newAnnotation(
+            HighlightSeverity.ERROR,
+            "Cannot assign $initializerType to $declaredType",
+        ).range(initializer).create()
     }
 
     private fun isAssignable(
@@ -165,7 +175,10 @@ class TealAnnotator : Annotator {
         }
 
     private fun inferLiteralType(expr: TealExpr): String? {
-        val literal = PsiTreeUtil.findChildOfType(expr, TealLiteralExpr::class.java) ?: return null
+        val literal =
+            expr as? TealLiteralExpr
+                ?: PsiTreeUtil.findChildOfType(expr, TealLiteralExpr::class.java)
+                ?: return null
         val node = literal.node
         return when {
             node.findChildByType(TealTypes.NUMBER) != null -> "number"
