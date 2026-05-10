@@ -74,16 +74,20 @@ ID=[A-Za-z_][A-Za-z0-9_]*
   "not"                   { return NOT; }
   "or"                    { return OR; }
   "repeat"                { return REPEAT; }
+  "require"               { return REQUIRE; }
   "record"                { return RECORD; }
   "return"                { return RETURN; }
   "then"                  { return THEN; }
   "true"                  { return TRUE; }
   "type"                  { return TYPE; }
   "until"                 { return UNTIL; }
+  "userdata"              { return USERDATA; }
+  "where"                 { return WHERE; }
   "while"                 { return WHILE; }
   "enum"                  { return ENUM; }
   "as"                    { return AS; }
   "is"                    { return IS; }
+  "metamethod"            { return METAMETHOD; }
   "REGION"                { return REGION; }
   "ENDREGION"             { return ENDREGION; }
   "..."                   { return ELLIPSIS; }

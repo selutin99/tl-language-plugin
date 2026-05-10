@@ -12,6 +12,7 @@ import com.galua.teal.psi.TealTypeAnn
 import com.galua.teal.psi.TealTypeName
 import com.galua.teal.psi.TealTypeNameDef
 import com.galua.teal.psi.TealTypedVarStat
+import com.galua.teal.psi.TealTypeexp
 import com.galua.teal.psi.TealTypes
 import com.intellij.lang.annotation.AnnotationHolder
 import com.intellij.lang.annotation.Annotator
@@ -42,19 +43,25 @@ class TealAnnotator : Annotator {
         element: TealLocalDef,
         holder: AnnotationHolder,
     ) {
-        val typedNameList = element.typedNameList ?: return
+        val typeListAnn = element.typeListAnn ?: return
         val exprList = element.exprList ?: return
         val exprs = exprList.exprList
         if (exprs.isEmpty()) return
 
-        val typedNames = typedNameList.typedNameDefList
-        for (index in 0 until minOf(typedNames.size, exprs.size)) {
-            validateAssignment(typedNames[index].typeAnn, exprs[index], holder)
+        val declaredTypes = typeListAnn.typeexpList?.typeexpList ?: return
+        for (index in 0 until minOf(declaredTypes.size, exprs.size)) {
+            validateAssignment(declaredTypes[index], exprs[index], holder)
         }
     }
 
     private fun extractDeclaredType(typeAnn: TealTypeAnn): String? {
         val typeText = typeAnn.typeexp?.text ?: typeAnn.text
+        return extractDeclaredType(typeText)
+    }
+
+    private fun extractDeclaredType(typeexp: TealTypeexp): String? = extractDeclaredType(typeexp.text)
+
+    private fun extractDeclaredType(typeText: String): String? {
         val stripped = typeText.replaceFirst(Regex("^:+\\s*"), "").trim()
         return stripped.ifEmpty { null }
     }
@@ -79,11 +86,11 @@ class TealAnnotator : Annotator {
     }
 
     private fun validateAssignment(
-        typeAnn: TealTypeAnn,
+        typeexp: TealTypeexp,
         initializer: TealExpr,
         holder: AnnotationHolder,
     ) {
-        val declaredType = extractDeclaredType(typeAnn) ?: return
+        val declaredType = extractDeclaredType(typeexp) ?: return
         if (!BUILT_IN_TYPES.contains(declaredType)) {
             return
         }

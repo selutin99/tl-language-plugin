@@ -50,7 +50,9 @@ object TealParserUtil : GeneratedParserUtilBase() {
             TealParser.classMethodDef(builder, level + 1) ||
             TealParser.funcDef(builder, level + 1) ||
             TealParser.localFuncDef(builder, level + 1) ||
+            TealParser.globalFuncDef(builder, level + 1) ||
             TealParser.localDef(builder, level + 1) ||
+            TealParser.globalDef(builder, level + 1) ||
             TealParser.typeAliasStat(builder, level + 1) ||
             TealParser.recordStat(builder, level + 1) ||
             TealParser.interfaceStat(builder, level + 1) ||
@@ -101,7 +103,7 @@ object TealParserUtil : GeneratedParserUtilBase() {
             val left = marker.precede()
             builder.advanceLexer()
             val nextMin = if (info.rightAssoc) info.precedence else info.precedence + 1
-            if (!parseBinaryExpr(builder, level + 1, nextMin)) {
+            if (!parseOperatorRightSide(builder, level + 1, opType, nextMin)) {
                 left.drop()
                 break
             }
@@ -112,6 +114,38 @@ object TealParserUtil : GeneratedParserUtilBase() {
 
         marker.drop()
         return true
+    }
+
+    private fun parseOperatorRightSide(
+        builder: PsiBuilder,
+        level: Int,
+        opType: IElementType,
+        nextMin: Int,
+    ): Boolean =
+        when (opType) {
+            TealTypes.AS -> parseCastType(builder, level + 1)
+            TealTypes.IS -> TealParser.typeexp(builder, level + 1)
+            else -> parseBinaryExpr(builder, level + 1, nextMin)
+        }
+
+    private fun parseCastType(
+        builder: PsiBuilder,
+        level: Int,
+    ): Boolean {
+        if (builder.tokenType != TealTypes.LPAREN) {
+            return TealParser.typeexp(builder, level + 1)
+        }
+
+        val marker = builder.mark()
+        builder.advanceLexer()
+        val parsed = TealParser.typeexpList(builder, level + 1) && consumeToken(builder, TealTypes.RPAREN)
+        if (parsed) {
+            marker.drop()
+            return true
+        }
+
+        marker.rollbackTo()
+        return false
     }
 
     private fun parseOperand(
@@ -168,7 +202,6 @@ object TealParserUtil : GeneratedParserUtilBase() {
         mapOf(
             TealTypes.OR to OpInfo(1, false),
             TealTypes.AND to OpInfo(2, false),
-            TealTypes.AS to OpInfo(3, false),
             TealTypes.IS to OpInfo(3, false),
             TealTypes.LT to OpInfo(4, false),
             TealTypes.LE to OpInfo(4, false),
@@ -189,5 +222,6 @@ object TealParserUtil : GeneratedParserUtilBase() {
             TealTypes.DOUBLE_DIV to OpInfo(11, false),
             TealTypes.MOD to OpInfo(11, false),
             TealTypes.EXP to OpInfo(12, true),
+            TealTypes.AS to OpInfo(13, false),
         )
 }

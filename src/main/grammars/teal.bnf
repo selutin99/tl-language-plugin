@@ -45,16 +45,20 @@
         NOT = "not"
         OR = "or"
         REPEAT = "repeat"
+        REQUIRE = "require"
         RECORD = "record"
         RETURN = "return"
         THEN = "then"
         TRUE = "true"
         TYPE = "type"
         UNTIL = "until"
+        USERDATA = "userdata"
+        WHERE = "where"
         WHILE = "while"
         ENUM = "enum"
         AS = "as"
         IS = "is"
+        METAMETHOD = "metamethod"
         REGION = "REGION"
         ENDREGION = "ENDREGION"
 
@@ -148,6 +152,7 @@ private stat_impl ::=
 private stat_recover ::= !(ID
     | ',' | ';'
     | 'local' | 'global' | 'type' | 'record' | 'interface' | 'enum'
+    | 'where' | 'userdata' | 'metamethod' | 'require'
     | 'do' | 'while' | 'repeat' | 'function' | 'if' | 'for' | 'return' | break
     | nil | true | false | STRING | NUMBER | '::' | 'goto'
     | unaryOp)
@@ -235,7 +240,7 @@ gotoStat ::= 'goto' ID {
         getReferences
     ]
 }
-private defStat ::= classMethodDef | funcDef | localFuncDef | localDef | typeAliasStat | recordStat | interfaceStat | enumStat
+private defStat ::= classMethodDef | funcDef | localFuncDef | globalFuncDef | localDef | globalDef | typeAliasStat | recordStat | interfaceStat | enumStat
 exprStat ::= expr {
     mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
 }
@@ -321,15 +326,44 @@ localFuncDef ::= 'local' 'function' ID funcBody {
         getParams
     ]
 }
+globalFuncDef ::= 'global' 'function' ID funcBody {
+    pin = 2
+    implements = [
+        "com.galua.teal.psi.TealFuncBodyOwner"
+        "com.galua.teal.psi.TealDeclaration"
+        "com.galua.teal.psi.TealStatement"
+        "com.intellij.psi.PsiNameIdentifierOwner"
+    ]
+    mixin = "com.galua.teal.psi.impl.TealNamedElementMixin"
+    methods = [
+        getComment
+        getParamNameDefList
+        getNameIdentifier
+        setName
+        getName
+        getTextOffset
+        guessReturnType
+        getParams
+    ]
+}
 attribute ::= '<' ID '>' {
     pin = 1
 }
 nameList ::= nameDef attribute? (',' nameDef attribute?)* {
 }
-typedNameDef ::= nameDef typeAnn
-typedNameList ::= typedNameDef attribute? (',' typedNameDef attribute?)* {
+typeListAnn ::= ':' typeexpList {
+    pin = 1
 }
-localDef ::= 'local' (typedNameList | nameList) ('=' exprList)? {
+localDef ::= 'local' nameList typeListAnn? ('=' exprList)? {
+    pin = 1
+    implements = [
+        "com.galua.teal.psi.TealDeclaration"
+        "com.galua.teal.psi.TealStatement"
+        "com.galua.teal.psi.TealDeclarationScope"
+    ]
+    methods = [getComment assign = 'ASSIGN']
+}
+globalDef ::= 'global' nameList (typeListAnn ('=' exprList)? | '=' exprList) {
     pin = 1
     implements = [
         "com.galua.teal.psi.TealDeclaration"
@@ -346,33 +380,45 @@ typedVarStat ::= typedVarList ('=' exprList)? {
 }
 
 typeAliasStat ::= localTypeAliasStat | globalTypeAliasStat
-localTypeAliasStat ::= 'local' 'type' typeNameDef '=' typeexp {
+localTypeAliasStat ::= 'local' 'type' typeNameDef '=' newType {
     pin = 2
 }
-globalTypeAliasStat ::= 'global' 'type' typeNameDef '=' typeexp {
+globalTypeAliasStat ::= 'global' 'type' typeNameDef ('=' newType)? {
     pin = 2
 }
 
-recordStat ::= 'local'? 'record' typeNameDef recordBody 'end' {
-    pin = 2
-}
-recordBody ::= recordField*
-recordField ::= ID typeAnn recordFieldSep?
-recordFieldSep ::= ',' | ';'
+private visibility ::= 'local' | 'global'
 
-interfaceStat ::= 'local'? 'interface' typeNameDef interfaceBody 'end' {
+recordStat ::= visibility? 'record' typeNameDef recordBody {
     pin = 2
 }
-interfaceBody ::= interfaceField*
-interfaceField ::= ID typeAnn interfaceFieldSep?
-interfaceFieldSep ::= ',' | ';'
+recordBody ::= typeParams? ('is' interfaceList)? ('where' expr)? recordEntry* 'end' {
+    pin(".*") = 1
+}
+interfaceList ::= nominalType (',' nominalType)* | typeArray (',' nominalType)*
+recordEntry ::= 'userdata'
+    | 'type' typeNameDef '=' newType
+    | 'metamethod'? recordKey ':' typeexp
+    | 'record' typeNameDef recordBody
+    | 'enum' typeNameDef enumBody
+recordKey ::= ID | '[' STRING ']'
 
-enumStat ::= 'local'? 'enum' typeNameDef enumBody 'end' {
+interfaceStat ::= visibility? 'interface' typeNameDef recordBody {
     pin = 2
 }
-enumBody ::= enumField*
-enumField ::= (STRING | ID) enumFieldSep?
-enumFieldSep ::= ',' | ';'
+
+enumStat ::= visibility? 'enum' typeNameDef enumBody {
+    pin = 2
+}
+enumBody ::= STRING* 'end' {
+    pin(".*") = 1
+}
+
+newType ::= 'record' recordBody
+    | 'enum' enumBody
+    | requireType
+    | typeexp
+requireType ::= 'require' '(' STRING ')' ('.' ID)*
 
 returnStat ::= return exprList? {
     mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
@@ -407,19 +453,26 @@ typeParen ::= '(' typeexp ')' {
     pin = 1
 }
 
-typeNameRef ::= typeName typeGenericArgs?
+typeNameRef ::= nominalType
+nominalType ::= typeName ('.' typeName)* typeGenericArgs?
 typeName ::= ID | 'self' | 'any' | 'nil'
 typeGenericArgs ::= '<' typeexpList '>' {
+    pin = 1
+}
+typeParams ::= '<' typeNameDef (',' typeNameDef)* '>' {
     pin = 1
 }
 
 typeexpList ::= typeexp (',' typeexp)*
 
-typeFunction ::= 'function' typeFuncParams typeFuncReturns?
-typeFuncParams ::= '(' typeexpList? ')' {
+typeFunction ::= 'function' typeParams? typeFuncParams typeFuncReturns?
+typeFuncParams ::= '(' partypeList? ')' {
     pin = 1
 }
-typeFuncReturns ::= ':' typeexpList
+typeFuncReturns ::= ':' retList
+retList ::= '(' typeexpList? '...'? ')' | typeexpList '...'?
+partypeList ::= partype (',' partype)*
+partype ::= ID '?'? ':' typeexp | '?'? typeexp
 
 typeArray ::= '{' typeexp '}' {
     pin = 1
@@ -431,7 +484,7 @@ typeTuple ::= '{' typeexp (',' typeexp)+ '}' {
     pin = 1
 }
 
-funcReturnType ::= ':' typeexpList {
+funcReturnType ::= ':' retList {
     pin = 1
 }
 
@@ -523,7 +576,7 @@ closureExpr ::= 'function' funcBody {
     mixin = 'com.galua.teal.psi.impl.TealClosureExprMixin'
 }
 
-funcBody ::= '(' (parList)? ')' funcReturnType? <<lazyBlock>>? 'end' {
+funcBody ::= typeParams? '(' (parList)? ')' funcReturnType? <<lazyBlock>>? 'end' {
     pin = 1
     implements = [
         "com.galua.teal.psi.TealIndentRange"
@@ -535,7 +588,7 @@ funcBody ::= '(' (parList)? ')' funcReturnType? <<lazyBlock>>? 'end' {
     ]
 }
 
-private parList ::= paramDef (',' paramDef)* (',' '...')? | '...' { recoverWhile = parList_recover }
+private parList ::= paramDef (',' paramDef)* (',' '...' typeAnn?)? | '...' typeAnn? { recoverWhile = parList_recover }
 private parList_recover ::= !(')'|'in')
 
 tableExpr ::= '{' fieldList '}' {
@@ -552,7 +605,7 @@ tableExpr ::= '{' fieldList '}' {
 private fieldList ::= (tableField (tableFieldSep tableField)* (tableFieldSep)?)?
 
 private tableField1 ::= '[' expr ']' '=' expr { pin = 1 }
-private tableField2 ::= ID '=' expr { pin = 2 }
+private tableField2 ::= ID typeAnn? '=' expr { pin = 2 }
 
 tableField ::= tableField1 | tableField2 | expr {
     methods = [
@@ -588,7 +641,7 @@ private tableField_recover ::= !(tableFieldSep | '}' | '[')
 tableFieldSep ::= ',' | ';'
 
 binaryOp ::= '+' | '-' | '*' | '/' | '^' | '%' | '..' |
-    '<' | '<=' | '>' | '>=' | '==' | '~=' | 'as' | 'is' |
+    '<' | '<=' | '>' | '>=' | '==' | '~=' |
     'and' | 'or'
     // lua5.3
     | '|' | '&' | '>>' | '<<' | '~' | '//'
@@ -632,5 +685,4 @@ nameExpr ::= ID {
 paramNameDef ::= ID {
     extends = nameDef
 }
-paramDef ::= typedParamDef | paramNameDef
-typedParamDef ::= paramNameDef typeAnn
+paramDef ::= paramNameDef '?'? typeAnn?
