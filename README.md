@@ -1,4 +1,4 @@
-# Teal Language Support for IntelliJ IDEA
+# ![Teal file icon](src/main/resources/icons/tealFile.svg) Teal Language Support for IntelliJ IDEA
 
 IntelliJ IDEA plugin for the [Teal](https://teal-language.org/) programming language (`.tl` files).
 
@@ -37,7 +37,7 @@ Version values are configured in [gradle.properties](gradle.properties) and [bui
 - JDK 17
 - IntelliJ IDEA 2023.3 or compatible IDE for plugin development
 - Gradle wrapper from this repository
-- Optional: Teal CLI (`tl`) for running the plugin actions against real files
+- Teal CLI (`tl`) is strongly recommended in `$PATH` for correct plugin behavior, including running `tl check`, `tl gen`, and `tl run` against real files
 
 ## Build Locally
 
