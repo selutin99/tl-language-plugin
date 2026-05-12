@@ -26,6 +26,9 @@
         <annotator
             language="Teal"
             implementationClass="com.galua.teal.annotator.TealAnnotator"/>
+        <externalAnnotator
+            language="Teal"
+            implementationClass="com.galua.teal.annotator.TealCheckAnnotator"/>
         <notificationGroup
             id="Teal"
             displayType="BALLOON"

@@ -41,6 +41,13 @@ class TealSyntaxHighlighter : SyntaxHighlighterBase() {
             )
 
         @JvmField
+        val NAME_DEFINITION_KEY: TextAttributesKey =
+            TextAttributesKey.createTextAttributesKey(
+                "TEAL_NAME_DEFINITION",
+                DefaultLanguageHighlighterColors.LOCAL_VARIABLE,
+            )
+
+        @JvmField
         val GENERIC_PARAMETER_KEY: TextAttributesKey =
             TextAttributesKey.createTextAttributesKey(
                 "TEAL_GENERIC_PARAMETER",
