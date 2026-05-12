@@ -67,7 +67,7 @@ Start a sandbox IntelliJ IDEA instance with the plugin installed
 ./gradlew runIde
 ```
 
-This is the fastest way to test syntax highlighting, parsing, annotations, and plugin actions manually.
+This is the fastest way to test syntax highlighting, parsing, annotations, and plugin actions manually
 
 ## Generate Lexer and Parser
 
@@ -88,7 +88,7 @@ Generated sources are placed in
 src/main/gen/
 ```
 
-`compileKotlin` depends on `generateLexer` and `generateParser`, so a normal build regenerates them when needed.
+`compileKotlin` depends on `generateLexer` and `generateParser`, so a normal build regenerates them when needed
 
 ## Tests and Checks
 
