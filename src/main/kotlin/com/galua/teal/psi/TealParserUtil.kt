@@ -51,12 +51,12 @@ object TealParserUtil : GeneratedParserUtilBase() {
             TealParser.funcDef(builder, level + 1) ||
             TealParser.localFuncDef(builder, level + 1) ||
             TealParser.globalFuncDef(builder, level + 1) ||
-            TealParser.localDef(builder, level + 1) ||
-            TealParser.globalDef(builder, level + 1) ||
             TealParser.typeAliasStat(builder, level + 1) ||
             TealParser.recordStat(builder, level + 1) ||
             TealParser.interfaceStat(builder, level + 1) ||
             TealParser.enumStat(builder, level + 1) ||
+            TealParser.localDef(builder, level + 1) ||
+            TealParser.globalDef(builder, level + 1) ||
             TealParser.returnStat(builder, level + 1) ||
             TealParser.breakStat(builder, level + 1) ||
             TealParser.labelStat(builder, level + 1) ||

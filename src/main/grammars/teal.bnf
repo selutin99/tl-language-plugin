@@ -240,7 +240,7 @@ gotoStat ::= 'goto' ID {
         getReferences
     ]
 }
-private defStat ::= classMethodDef | funcDef | localFuncDef | globalFuncDef | localDef | globalDef | typeAliasStat | recordStat | interfaceStat | enumStat
+private defStat ::= classMethodDef | funcDef | localFuncDef | globalFuncDef | typeAliasStat | recordStat | interfaceStat | enumStat | localDef | globalDef
 exprStat ::= expr {
     mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
 }
@@ -395,7 +395,8 @@ recordStat ::= visibility? 'record' typeNameDef recordBody {
 recordBody ::= typeParams? ('is' interfaceList)? ('where' expr)? recordEntry* 'end' {
     pin(".*") = 1
 }
-interfaceList ::= nominalType (',' nominalType)* | typeArray (',' nominalType)*
+interfaceList ::= interfaceType (',' interfaceType)*
+private interfaceType ::= nominalType | typeArray | 'userdata'
 recordEntry ::= 'userdata'
     | 'type' typeNameDef '=' newType
     | 'metamethod'? recordKey ':' typeexp
