@@ -1,4 +1,4 @@
-name: "`tl check` compatibility"
+name: "tl check compatibility"
 description: Report a mismatch between the plugin and the official Teal checker
 title: "[tl check]: "
 labels:
