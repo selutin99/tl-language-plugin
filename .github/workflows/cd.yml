@@ -81,6 +81,14 @@ jobs:
 
           echo "zip=${FILES[0]}" >> "$GITHUB_OUTPUT"
 
+      - name: Set up release SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.RELEASE_TAG_SSH_KEY }}
+
+      - name: Use SSH remote
+        run: git remote set-url origin git@github.com:${{ github.repository }}.git
+
       - name: Create release tag
         run: |
           TAG="${{ steps.version.outputs.tag }}"
