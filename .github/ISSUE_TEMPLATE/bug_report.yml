@@ -1,0 +1,109 @@
+name: Bug report
+description: Report a problem in the Teal IntelliJ IDEA plugin
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Teal Language Support for IntelliJ IDEA.
+        Please include enough detail for the issue to be reproduced in a local IDE sandbox
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+      placeholder: The plugin highlights valid Teal code as invalid when
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Minimal Teal example
+      description: Paste the smallest `.tl` snippet or file that reproduces the problem
+      render: teal
+      placeholder: |
+        local record User
+          name: string
+        end
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should the plugin do instead?
+      placeholder: The file should parse without errors and type names should be highlighted correctly
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happens now? Include screenshots when visual highlighting matters
+      placeholder: The parser reports an unexpected token at
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: List the exact actions needed to reproduce the bug
+      placeholder: |
+        1. Open the attached `.tl` file
+        2. Wait for highlighting to finish
+        3. Run the `Teal > check` action
+    validations:
+      required: true
+
+  - type: input
+    id: ide-version
+    attributes:
+      label: IDE version
+      placeholder: IntelliJ IDEA 2023.3.8
+    validations:
+      required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version or commit
+      placeholder: 0.1.0 or commit SHA
+    validations:
+      required: true
+
+  - type: input
+    id: teal-version
+    attributes:
+      label: Teal CLI version
+      description: Run `tl version` if available
+      placeholder: 0.24.7
+    validations:
+      required: false
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Linux
+        - Windows
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or stack traces
+      description: Paste relevant IDE logs, exceptions, or Gradle output
+      render: text
+    validations:
+      required: false

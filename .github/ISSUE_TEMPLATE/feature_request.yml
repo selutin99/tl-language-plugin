@@ -1,0 +1,83 @@
+name: Feature request
+description: Suggest an improvement for Teal language support
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing an improvement.
+        Good feature requests explain the Teal workflow, the IDE behavior users expect, and how it should be tested
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What Teal or IDE workflow is difficult today?
+      placeholder: It is hard to understand record field types because
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the IDE experience you would like to have
+      placeholder: The plugin should provide completion for record fields after
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Lexer or parser
+        - Syntax highlighting
+        - Annotator or inspections
+        - Completion
+        - Navigation
+        - Refactoring
+        - Formatter
+        - "`tl` CLI integration"
+        - Project configuration
+        - Tests or infrastructure
+        - Documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: teal-example
+    attributes:
+      label: Teal example
+      description: Include a representative `.tl` snippet when the feature is language-related
+      render: teal
+      placeholder: |
+        local type Status = "open" | "closed"
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Link to Teal documentation, compiler behavior, VS Code extension behavior, or related IntelliJ Platform docs
+      placeholder: |
+        - https://teal-language.org/book/latest/types_in_teal.html
+        - https://plugins.jetbrains.com/docs/intellij/welcome.html
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: What should be true when this is implemented?
+      placeholder: |
+        - The example above has no parser errors
+        - The behavior matches `tl check`
+        - A regression test covers the new case
+    validations:
+      required: true

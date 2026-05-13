@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Teal language documentation
+    url: https://teal-language.org/book/latest/introduction.html
+    about: Read the official Teal language guide
+  - name: IntelliJ Platform SDK documentation
+    url: https://plugins.jetbrains.com/docs/intellij/welcome.html
+    about: Reference documentation for IntelliJ IDEA plugin development

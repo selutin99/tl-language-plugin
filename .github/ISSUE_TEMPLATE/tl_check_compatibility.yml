@@ -1,0 +1,84 @@
+name: "`tl check` compatibility"
+description: Report a mismatch between the plugin and the official Teal checker
+title: "[tl check]: "
+labels:
+  - compatibility
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The plugin aims to stay compatible with the official Teal compiler.
+        Use this template when `tl check` and the IntelliJ plugin disagree
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Minimal Teal example
+      description: Paste a minimal `.tl` file that shows the mismatch
+      render: teal
+      placeholder: |
+        local x: integer = "not an integer"
+    validations:
+      required: true
+
+  - type: textarea
+    id: tl-check-output
+    attributes:
+      label: "`tl check` output"
+      description: Paste the exact output from the official Teal CLI
+      render: text
+      placeholder: |
+        $ tl check example.tl
+        <output>
+    validations:
+      required: true
+
+  - type: textarea
+    id: plugin-behavior
+    attributes:
+      label: Plugin behavior
+      description: Explain how IntelliJ highlighting, parsing, annotations, or actions differ
+      placeholder: IntelliJ reports no problem, but `tl check` reports
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mismatch-type
+    attributes:
+      label: Mismatch type
+      multiple: true
+      options:
+        - Plugin reports an error but `tl check` accepts the code
+        - "`tl check` reports an error but the plugin does not"
+        - Error location differs
+        - Error message differs
+        - Generated Lua differs
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: teal-version
+    attributes:
+      label: Teal CLI version
+      description: Run `tl version` if available
+      placeholder: 0.24.7
+    validations:
+      required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version or commit
+      placeholder: 0.1.0 or commit SHA
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional notes
+      description: Add links to Teal docs, compiler source, screenshots, or related issues
+    validations:
+      required: false
