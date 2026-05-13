@@ -66,3 +66,12 @@ tasks {
 tasks.named("compileKotlin") {
     dependsOn("generateParser", "generateLexer")
 }
+
+tasks.register("printPluginVersion") {
+    group = "help"
+    description = "Prints the plugin version"
+
+    doLast {
+        println(project.version)
+    }
+}
