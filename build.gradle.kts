@@ -48,6 +48,14 @@ tasks {
         untilBuild.set("251.*")
     }
 
+    runIde {
+        systemProperty("idea.plugins.disabled", "com.intellij.gradle")
+    }
+
+    buildSearchableOptions {
+        enabled = false
+    }
+
     withType<org.jetbrains.grammarkit.tasks.GenerateParserTask> {
         sourceFile.set(file("src/main/grammars/teal.bnf"))
         targetRootOutputDir.set(file("src/main/gen"))

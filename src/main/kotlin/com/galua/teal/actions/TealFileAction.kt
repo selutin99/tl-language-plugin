@@ -4,10 +4,8 @@
  */
 package com.galua.teal.actions
 
-import com.galua.teal.core.TealConstants.TEAL_FILE_EXTENSION
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.vfs.VirtualFile
 
@@ -34,10 +32,7 @@ abstract class TealFileAction : AnAction() {
      * @param event action event that contains the current selection
      * @return selected Teal file or null when the selection is not a .tl file
      */
-    protected fun selectedTealFile(event: AnActionEvent): VirtualFile? {
-        val file = event.getData(CommonDataKeys.VIRTUAL_FILE)
-        return if (file?.extension == TEAL_FILE_EXTENSION) file else null
-    }
+    protected fun selectedTealFile(event: AnActionEvent): VirtualFile? = findSelectedTealFile(event)
 
     /**
      * Shows the action only when a Teal file is selected
