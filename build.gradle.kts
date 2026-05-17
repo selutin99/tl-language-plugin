@@ -43,6 +43,11 @@ ktlint {
 }
 
 tasks {
+    patchPluginXml {
+        sinceBuild.set("233")
+        untilBuild.set("251.*")
+    }
+
     withType<org.jetbrains.grammarkit.tasks.GenerateParserTask> {
         sourceFile.set(file("src/main/grammars/teal.bnf"))
         targetRootOutputDir.set(file("src/main/gen"))
