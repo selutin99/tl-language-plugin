@@ -11,6 +11,7 @@ permissions:
   contents: write
 
 env:
+  JDK_VERSION: 17
   GIT_AUTHOR_NAME: github-actions[bot]
   GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
 
@@ -34,11 +35,11 @@ jobs:
           ref: ${{ github.event.workflow_run.head_sha }}
           fetch-depth: 0
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: ${{ env.JDK_VERSION }}
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4

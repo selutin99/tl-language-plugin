@@ -9,13 +9,13 @@ body:
     attributes:
       value: |
         The plugin aims to stay compatible with the official Teal compiler.
-        Use this template when `tl check` and the IntelliJ plugin disagree
+        Use this template when tl check and the IntelliJ plugin disagree
 
   - type: textarea
     id: code
     attributes:
       label: Minimal Teal example
-      description: Paste a minimal `.tl` file that shows the mismatch
+      description: Paste a minimal .tl file that shows the mismatch
       render: teal
       placeholder: |
         local x: integer = "not an integer"
@@ -25,7 +25,7 @@ body:
   - type: textarea
     id: tl-check-output
     attributes:
-      label: "`tl check` output"
+      label: "tl check output"
       description: Paste the exact output from the official Teal CLI
       render: text
       placeholder: |
@@ -39,7 +39,7 @@ body:
     attributes:
       label: Plugin behavior
       description: Explain how IntelliJ highlighting, parsing, annotations, or actions differ
-      placeholder: IntelliJ reports no problem, but `tl check` reports
+      placeholder: IntelliJ reports no problem, but tl check reports
     validations:
       required: true
 
@@ -49,8 +49,8 @@ body:
       label: Mismatch type
       multiple: true
       options:
-        - Plugin reports an error but `tl check` accepts the code
-        - "`tl check` reports an error but the plugin does not"
+        - Plugin reports an error but tl check accepts the code
+        - "tl check reports an error but the plugin does not"
         - Error location differs
         - Error message differs
         - Generated Lua differs
@@ -62,7 +62,7 @@ body:
     id: teal-version
     attributes:
       label: Teal CLI version
-      description: Run `tl version` if available
+      description: Run tl version if available
       placeholder: 0.24.7
     validations:
       required: true
