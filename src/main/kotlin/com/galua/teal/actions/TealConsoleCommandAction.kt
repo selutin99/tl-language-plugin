@@ -14,7 +14,18 @@ import com.intellij.execution.ui.RunContentDescriptor
 import com.intellij.execution.ui.RunContentManager
 import com.intellij.openapi.actionSystem.AnActionEvent
 
+/**
+ * Base action that runs a Teal CLI subcommand in an IntelliJ run console
+ *
+ * @param command subcommand to execute for the selected file through the Teal CLI
+ */
 abstract class TealConsoleCommandAction(private val command: String) : TealFileAction() {
+    /**
+     * Starts the configured Teal CLI command for the selected file
+     *
+     * @param event action event that provides project and selected file context
+     * @throws com.intellij.execution.ExecutionException when IntelliJ cannot start the process
+     */
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
         val file = selectedTealFile(event)

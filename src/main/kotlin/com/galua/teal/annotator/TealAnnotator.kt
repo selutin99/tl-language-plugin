@@ -14,7 +14,16 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 
+/**
+ * Adds semantic highlighting for Teal identifiers that the lexer cannot classify alone
+ */
 class TealAnnotator : Annotator {
+    /**
+     * Highlights Teal type identifiers and name definitions based on PSI context
+     *
+     * @param element psi element visited during the highlighting pass
+     * @param holder annotation holder for semantic highlighting
+     */
     override fun annotate(
         element: PsiElement,
         holder: AnnotationHolder,

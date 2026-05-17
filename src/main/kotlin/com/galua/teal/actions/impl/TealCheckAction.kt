@@ -6,4 +6,7 @@ package com.galua.teal.actions.impl
 
 import com.galua.teal.actions.TealConsoleCommandAction
 
+/**
+ * Runs tl check for the selected Teal file in an IntelliJ run console
+ */
 class TealCheckAction : TealConsoleCommandAction(command = "check")

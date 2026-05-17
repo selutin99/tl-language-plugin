@@ -13,7 +13,15 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task
 
+/**
+ * Runs tl gen for the selected Teal file and reports generation status
+ */
 class TealGenAction : TealFileAction() {
+    /**
+     * Starts tl gen in a background task for the selected Teal file
+     *
+     * @param event action event that provides project and selected file context
+     */
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
         val file = super.selectedTealFile(event)
@@ -24,6 +32,12 @@ class TealGenAction : TealFileAction() {
         saveFileIfNeeded(file)
 
         object : Task.Backgroundable(project, "Running tl gen", false) {
+            /**
+             * Executes tl gen and reports success or failure through IDE notifications
+             *
+             * @param indicator background task progress indicator
+             * @throws com.intellij.execution.ExecutionException when IntelliJ cannot start the process
+             */
             override fun run(indicator: ProgressIndicator) {
                 val commandLine =
                     GeneralCommandLine("tl", "gen", file.path)

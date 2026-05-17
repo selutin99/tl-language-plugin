@@ -27,7 +27,16 @@ import kotlin.io.path.createTempFile
 import kotlin.io.path.exists
 import kotlin.io.path.writeText
 
+/**
+ * Runs tl check for the current editor buffer and converts compiler diagnostics into annotations
+ */
 class TealCheckAnnotator : ExternalAnnotator<TealCheckInput, TealCheckResult>() {
+    /**
+     * Captures the current file text and resolves the working directory for tl check
+     *
+     * @param file psi file that should be checked by the Teal compiler
+     * @return input snapshot for the background annotator or null for blank files
+     */
     override fun collectInformation(file: PsiFile): TealCheckInput? {
         val text = file.text
         if (text.isBlank()) {
@@ -44,6 +53,12 @@ class TealCheckAnnotator : ExternalAnnotator<TealCheckInput, TealCheckResult>() 
         )
     }
 
+    /**
+     * Runs tl check on a temporary copy of the editor buffer
+     *
+     * @param collectedInfo input snapshot collected on the EDT
+     * @return parsed compiler result or null when there is no input to check
+     */
     override fun doAnnotate(collectedInfo: TealCheckInput?): TealCheckResult? {
         val input = collectedInfo ?: return null
         ProgressManager.checkCanceled()
@@ -84,6 +99,13 @@ class TealCheckAnnotator : ExternalAnnotator<TealCheckInput, TealCheckResult>() 
         }
     }
 
+    /**
+     * Applies tl check diagnostics or execution failures to the editor annotation holder
+     *
+     * @param file psi file currently receiving annotations
+     * @param annotationResult result produced by the background annotator
+     * @param holder annotation holder for the current highlighting pass
+     */
     override fun apply(
         file: PsiFile,
         annotationResult: TealCheckResult?,
@@ -108,6 +130,13 @@ class TealCheckAnnotator : ExternalAnnotator<TealCheckInput, TealCheckResult>() 
         }
     }
 
+    /**
+     * Chooses the directory where tl check should run for the current file
+     *
+     * @param file psi file used to fall back to the project root
+     * @param originalFilePath path of the opened editor file when available
+     * @return closest Teal config root, project root, source directory, or current directory
+     */
     private fun findWorkDirectory(
         file: PsiFile,
         originalFilePath: Path?,
@@ -118,6 +147,12 @@ class TealCheckAnnotator : ExternalAnnotator<TealCheckInput, TealCheckResult>() 
         return tealRoot ?: projectRoot ?: sourceDirectory ?: Path.of(".").toAbsolutePath().normalize()
     }
 
+    /**
+     * Searches upward for the nearest tlconfig.lua file
+     *
+     * @param startDirectory directory where the search begins
+     * @return directory containing tlconfig.lua or null when no config is found
+     */
     private fun findTealConfigRoot(startDirectory: Path): Path? {
         var directory: Path? = startDirectory
         while (directory != null) {
@@ -129,6 +164,13 @@ class TealCheckAnnotator : ExternalAnnotator<TealCheckInput, TealCheckResult>() 
         return null
     }
 
+    /**
+     * Converts a compiler line and column diagnostic into an editor text range
+     *
+     * @param document editor document that owns the highlighted text
+     * @param diagnostic diagnostic with zero-based line and column offsets
+     * @return text range to highlight or null when the diagnostic points outside the document
+     */
     private fun diagnosticRange(
         document: Document,
         diagnostic: TealCheckDiagnostic,
@@ -144,6 +186,14 @@ class TealCheckAnnotator : ExternalAnnotator<TealCheckInput, TealCheckResult>() 
         return TextRange(start, end)
     }
 
+    /**
+     * Extends a diagnostic start offset to the end of the current identifier token
+     *
+     * @param document editor document that owns the highlighted text
+     * @param start start offset reported by the compiler
+     * @param lineEnd end offset of the diagnostic line
+     * @return token end offset or a one character fallback range end
+     */
     private fun findTokenEnd(
         document: Document,
         start: Int,
@@ -164,6 +214,12 @@ class TealCheckAnnotator : ExternalAnnotator<TealCheckInput, TealCheckResult>() 
 
     private fun isDiagnosticTokenChar(char: Char): Boolean = char.isLetterOrDigit() || char == '_'
 
+    /**
+     * Returns a minimal visible range for file level execution warnings
+     *
+     * @param document editor document that should receive the warning
+     * @return empty range for empty files or the first visible character range
+     */
     private fun firstVisibleRange(document: Document): TextRange {
         if (document.textLength == 0) {
             return TextRange.EMPTY_RANGE

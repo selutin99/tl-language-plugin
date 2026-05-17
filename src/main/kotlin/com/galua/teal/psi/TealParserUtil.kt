@@ -10,6 +10,9 @@ import com.intellij.lang.WhitespacesAndCommentsBinder
 import com.intellij.lang.parser.GeneratedParserUtilBase
 import com.intellij.psi.tree.IElementType
 
+/**
+ * Custom Grammar-Kit parser helpers for Teal constructs that need handwritten parsing
+ */
 object TealParserUtil : GeneratedParserUtilBase() {
     @JvmField
     val MY_LEFT_COMMENT_BINDER: WhitespacesAndCommentsBinder =
@@ -31,6 +34,13 @@ object TealParserUtil : GeneratedParserUtilBase() {
     val MY_RIGHT_COMMENT_BINDER: WhitespacesAndCommentsBinder =
         WhitespacesAndCommentsBinder { _, _, _ -> 0 }
 
+    /**
+     * Parses any Teal statement alternative in the order expected by the grammar
+     *
+     * @param builder parser builder positioned at a statement
+     * @param level current parser recursion level
+     * @return true when one statement alternative was parsed
+     */
     @JvmStatic
     fun parseStatement(
         builder: PsiBuilder,
@@ -66,18 +76,40 @@ object TealParserUtil : GeneratedParserUtilBase() {
             TealParser.exprStat(builder, level + 1)
     }
 
+    /**
+     * Parses a Teal block through the generated parser entry point
+     *
+     * @param builder parser builder positioned at a block
+     * @param level current parser recursion level
+     * @return true when the block was parsed
+     */
     @JvmStatic
     fun lazyBlock(
         builder: PsiBuilder,
         level: Int,
     ): Boolean = TealParser.block(builder, level + 1)
 
+    /**
+     * Parses a Teal expression using the handwritten binary precedence parser
+     *
+     * @param builder parser builder positioned at an expression
+     * @param level current parser recursion level
+     * @return true when an expression was parsed
+     */
     @JvmStatic
     fun parseExpr(
         builder: PsiBuilder,
         level: Int,
     ): Boolean = parseBinaryExpr(builder, level, 0)
 
+    /**
+     * Parses binary expressions with precedence climbing and associativity rules
+     *
+     * @param builder parser builder positioned at the left operand
+     * @param level current parser recursion level
+     * @param minPrec minimum operator precedence allowed at this position
+     * @return true when a binary expression or operand was parsed
+     */
     private fun parseBinaryExpr(
         builder: PsiBuilder,
         level: Int,
@@ -116,6 +148,15 @@ object TealParserUtil : GeneratedParserUtilBase() {
         return true
     }
 
+    /**
+     * Parses the right side of a binary operator with operator specific rules
+     *
+     * @param builder parser builder positioned after the operator
+     * @param level current parser recursion level
+     * @param opType operator token type being parsed
+     * @param nextMin minimum precedence for nested binary expressions
+     * @return true when the operator right side was parsed
+     */
     private fun parseOperatorRightSide(
         builder: PsiBuilder,
         level: Int,
@@ -128,6 +169,13 @@ object TealParserUtil : GeneratedParserUtilBase() {
             else -> parseBinaryExpr(builder, level + 1, nextMin)
         }
 
+    /**
+     * Parses the type expression used by the Teal as cast operator
+     *
+     * @param builder parser builder positioned at a type expression or parenthesized list
+     * @param level current parser recursion level
+     * @return true when the cast target type was parsed
+     */
     private fun parseCastType(
         builder: PsiBuilder,
         level: Int,
@@ -148,6 +196,13 @@ object TealParserUtil : GeneratedParserUtilBase() {
         return false
     }
 
+    /**
+     * Parses a unary expression or primary expression as a binary operand
+     *
+     * @param builder parser builder positioned at an operand
+     * @param level current parser recursion level
+     * @return true when an operand was parsed
+     */
     private fun parseOperand(
         builder: PsiBuilder,
         level: Int,
@@ -158,6 +213,13 @@ object TealParserUtil : GeneratedParserUtilBase() {
         return parsePrimary(builder, level + 1)
     }
 
+    /**
+     * Parses a primary expression followed by index or call suffixes
+     *
+     * @param builder parser builder positioned at a primary expression
+     * @param level current parser recursion level
+     * @return true when a primary expression was parsed
+     */
     private fun parsePrimary(
         builder: PsiBuilder,
         level: Int,
@@ -196,6 +258,12 @@ object TealParserUtil : GeneratedParserUtilBase() {
         return true
     }
 
+    /**
+     * Binary operator precedence and associativity metadata
+     *
+     * @param precedence numeric precedence where larger values bind more tightly
+     * @param rightAssoc whether operators with this metadata associate to the right
+     */
     private data class OpInfo(val precedence: Int, val rightAssoc: Boolean)
 
     private val BINARY_INFO: Map<IElementType, OpInfo> =
