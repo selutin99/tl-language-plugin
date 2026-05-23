@@ -4,13 +4,43 @@ IntelliJ IDEA plugin for the [Teal](https://teal-language.org/) programming lang
 
 Teal is a typed dialect of Lua. This plugin provides IDE support for editing Teal files in IntelliJ IDEA-based IDEs
 
+## Table of Contents
+
+- [Features](#features)
+- [Live Templates](#live-templates)
+- [Useful Links](#useful-links)
+- [Project Versions](#project-versions)
+- [Requirements](#requirements)
+- [Build Locally](#build-locally)
+- [Run in a Local IDE Sandbox](#run-in-a-local-ide-sandbox)
+- [Generate Lexer and Parser](#generate-lexer-and-parser)
+- [Tests and Checks](#tests-and-checks)
+- [Development Notes](#development-notes)
+- [Plugin Actions](#plugin-actions)
+
 ## Features
 
 - Registers `.tl` files as Teal source files
 - Syntax highlighting for Teal/Lua keywords, strings, numbers, identifiers, operators, comments, and type identifiers
 - Grammar-Kit based lexer/parser and PSI model
 - Basic annotations for Teal type names and simple literal assignment type mismatches
+- Live templates for common Teal snippets such as `req`, `loc`, `fori`, `forp`, records, and enums
 - Context menu actions for `tl check`, `tl gen`, and `tl run`
+
+## Live Templates
+
+Type a trigger in a Teal file and press `Tab` to expand it.
+
+| Trigger | Name | Expands to |
+| --- | --- | --- |
+| `req` | Local require | `local name = require("module")` |
+| `loc` | Local variable | `local name = value` |
+| `fori` | ipairs loop | `for k, v in ipairs(sequence) do ... end` |
+| `forp` | pairs loop | `for k, v in pairs(table) do ... end` |
+| `lrec` | Local record definition | `local record name ... end` |
+| `grec` | Global record definition | `global record name ... end` |
+| `lenu` | Local enum definition | `local enum name ... end` |
+| `genu` | Global enum definition | `global enum name ... end` |
 
 ## Useful Links
 

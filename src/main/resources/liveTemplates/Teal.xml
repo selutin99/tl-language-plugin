@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    SPDX-FileCopyrightText: Copyright (c) 2026 Alexander Selyutin
+    SPDX-License-Identifier: MIT
+-->
+<templateSet group="Teal">
+    <template name="req" value="local $NAME$ = require(&quot;$MODULE$&quot;)" description="Local require"
+              toReformat="true" toShortenFQNames="false" shortcut="TAB">
+        <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true"/>
+        <variable name="MODULE" expression="" defaultValue="&quot;module&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="TEAL" value="true"/>
+        </context>
+    </template>
+    <template name="loc" value="local $NAME$ = $VALUE$" description="Local variable" toReformat="true"
+              toShortenFQNames="false" shortcut="TAB">
+        <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true"/>
+        <variable name="VALUE" expression="" defaultValue="&quot;value&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="TEAL" value="true"/>
+        </context>
+    </template>
+    <template name="fori" value="for $KEY$, $VALUE$ in ipairs($SEQUENCE$) do&#10;&#9;$END$&#10;end"
+              description="ipairs loop" toReformat="true" toShortenFQNames="false" shortcut="TAB">
+        <variable name="KEY" expression="" defaultValue="&quot;k&quot;" alwaysStopAt="true"/>
+        <variable name="VALUE" expression="" defaultValue="&quot;v&quot;" alwaysStopAt="true"/>
+        <variable name="SEQUENCE" expression="" defaultValue="&quot;sequence&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="TEAL" value="true"/>
+        </context>
+    </template>
+    <template name="forp" value="for $KEY$, $VALUE$ in pairs($TABLE$) do&#10;&#9;$END$&#10;end" description="pairs loop"
+              toReformat="true" toShortenFQNames="false" shortcut="TAB">
+        <variable name="KEY" expression="" defaultValue="&quot;k&quot;" alwaysStopAt="true"/>
+        <variable name="VALUE" expression="" defaultValue="&quot;v&quot;" alwaysStopAt="true"/>
+        <variable name="TABLE" expression="" defaultValue="&quot;table&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="TEAL" value="true"/>
+        </context>
+    </template>
+    <template name="lrec" value="local record $NAME$&#10;&#9;$END$&#10;end" description="Local record definition"
+              toReformat="true" toShortenFQNames="false" shortcut="TAB">
+        <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="TEAL" value="true"/>
+        </context>
+    </template>
+    <template name="grec" value="global record $NAME$&#10;&#9;$END$&#10;end" description="Global record definition"
+              toReformat="true" toShortenFQNames="false" shortcut="TAB">
+        <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="TEAL" value="true"/>
+        </context>
+    </template>
+    <template name="lenu" value="local enum $NAME$&#10;&#9;&quot;$END$&quot;&#10;end"
+              description="Local enum definition" toReformat="true" toShortenFQNames="false" shortcut="TAB">
+        <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="TEAL" value="true"/>
+        </context>
+    </template>
+    <template name="genu" value="global enum $NAME$&#10;&#9;&quot;$END$&quot;&#10;end"
+              description="Global enum definition" toReformat="true" toShortenFQNames="false" shortcut="TAB">
+        <variable name="NAME" expression="" defaultValue="&quot;name&quot;" alwaysStopAt="true"/>
+        <context>
+            <option name="TEAL" value="true"/>
+        </context>
+    </template>
+</templateSet>

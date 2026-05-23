@@ -29,6 +29,10 @@
         <externalAnnotator
             language="Teal"
             implementationClass="com.galua.teal.annotator.TealCheckAnnotator"/>
+        <liveTemplateContext
+            contextId="TEAL"
+            implementation="com.galua.teal.livetemplates.TealTemplateContextType"/>
+        <defaultLiveTemplates file="liveTemplates/Teal"/>
         <notificationGroup
             id="Teal"
             displayType="BALLOON"

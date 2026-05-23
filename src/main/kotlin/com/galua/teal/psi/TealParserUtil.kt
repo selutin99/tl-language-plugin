@@ -90,6 +90,29 @@ object TealParserUtil : GeneratedParserUtilBase() {
     ): Boolean = TealParser.block(builder, level + 1)
 
     /**
+     * Parses Teal's contextual require keyword in type require declarations.
+     *
+     * The official Teal lexer treats `require` as an identifier so runtime calls
+     * like `local mod = require("mod")` stay valid Lua expressions.
+     */
+    @JvmStatic
+    fun parseRequireKeyword(
+        builder: PsiBuilder,
+        level: Int,
+    ): Boolean {
+        if (!recursion_guard_(builder, level, "parseRequireKeyword")) {
+            return false
+        }
+
+        if (builder.tokenType == TealTypes.ID && builder.tokenText == "require") {
+            builder.advanceLexer()
+            return true
+        }
+
+        return false
+    }
+
+    /**
      * Parses a Teal expression using the handwritten binary precedence parser
      *
      * @param builder parser builder positioned at an expression

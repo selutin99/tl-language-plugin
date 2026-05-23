@@ -74,7 +74,6 @@ ID=[A-Za-z_][A-Za-z0-9_]*
   "not"                   { return NOT; }
   "or"                    { return OR; }
   "repeat"                { return REPEAT; }
-  "require"               { return REQUIRE; }
   "record"                { return RECORD; }
   "return"                { return RETURN; }
   "then"                  { return THEN; }

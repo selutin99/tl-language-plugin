@@ -13,7 +13,6 @@ class TealSyntaxHighlighterTest : BasePlatformTestCase() {
         val highlighter = TealSyntaxHighlighter()
 
         // then
-        assertTrue(highlighter.getTokenHighlights(TealTypes.REQUIRE).isNotEmpty())
         assertTrue(highlighter.getTokenHighlights(TealTypes.USERDATA).isNotEmpty())
         assertTrue(highlighter.getTokenHighlights(TealTypes.WHERE).isNotEmpty())
         assertTrue(highlighter.getTokenHighlights(TealTypes.METAMETHOD).isNotEmpty())

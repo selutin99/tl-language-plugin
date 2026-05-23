@@ -66,7 +66,6 @@ object TealTokenSets {
             TealTypes.NOT,
             TealTypes.OR,
             TealTypes.RECORD,
-            TealTypes.REQUIRE,
             TealTypes.REPEAT,
             TealTypes.RETURN,
             TealTypes.THEN,

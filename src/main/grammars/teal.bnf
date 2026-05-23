@@ -45,7 +45,6 @@
         NOT = "not"
         OR = "or"
         REPEAT = "repeat"
-        REQUIRE = "require"
         RECORD = "record"
         RETURN = "return"
         THEN = "then"
@@ -152,7 +151,7 @@ private stat_impl ::=
 private stat_recover ::= !(ID
     | ',' | ';'
     | 'local' | 'global' | 'type' | 'record' | 'interface' | 'enum'
-    | 'where' | 'userdata' | 'metamethod' | 'require'
+    | 'where' | 'userdata' | 'metamethod'
     | 'do' | 'while' | 'repeat' | 'function' | 'if' | 'for' | 'return' | break
     | nil | true | false | STRING | NUMBER | '::' | 'goto'
     | unaryOp)
@@ -419,7 +418,8 @@ newType ::= 'record' recordBody
     | 'enum' enumBody
     | requireType
     | typeexp
-requireType ::= 'require' '(' STRING ')' ('.' ID)*
+private requireKeyword ::= <<parseRequireKeyword>>
+requireType ::= requireKeyword '(' STRING ')' ('.' ID)*
 
 returnStat ::= return exprList? {
     mixin = "com.galua.teal.psi.impl.TealStatMixin<com.galua.teal.stubs.TealPlaceholderStub>"
